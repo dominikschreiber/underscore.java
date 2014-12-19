@@ -104,8 +104,8 @@ public class _Test {
     public void staticReduceWithSum() {
         Integer result = _.reduce(range(6), new BinaryFn<Integer, Integer, Integer>() {
             @Override
-            public Integer apply(Integer prev, Integer now) {
-                return prev + now;
+            public Integer apply(Integer current, Integer sum) {
+                return current + sum;
             }
         }, 0);
 
@@ -117,8 +117,8 @@ public class _Test {
         Integer result = new _<Integer>(range(6))
                 .reduce(new BinaryFn<Integer, Integer, Integer>() {
                     @Override
-                    public Integer apply(Integer prev, Integer now) {
-                        return prev + now;
+                    public Integer apply(Integer current, Integer sum) {
+                        return current + sum;
                     }
                 }, 0);
 
