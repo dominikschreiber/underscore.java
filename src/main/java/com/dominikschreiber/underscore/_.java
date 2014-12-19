@@ -16,7 +16,7 @@ public final class _ <T> {
      * <p>wraps {@code values} to allow chained execution, e.g.</p>
      * <pre>{@code
      * // compute sum of squares
-     * _(new int[] {1, 2, 3, 4, 5})
+     * new _<Integer>(Arrays.asList(new Integer[] {1, 2, 3, 4, 5}))
      *   // square the input
      *   .map(new Fn<Integer, Integer>() {
      *       public Integer apply(Integer in) {
@@ -25,19 +25,19 @@ public final class _ <T> {
      *   })
      *   // sum the squares
      *   .reduce(new BinaryFn<Integer, Integer, Integer>() {
-     *       public Integer apply(Integer prev, Integer now) {
-     *           return prev + now;
+     *       public Integer apply(Integer now, Integer prev) {
+     *           return now + prev;
      *       }
      *   }, 0);
      * }</pre>
      * <p>If the call doesn't end up with {@link #reduce(BinaryFn, Object)},
      * you need to access the values using {@link #value()}:</p>
      * <pre>{@code
-     * _(new int[] {1, 2, 3, 4, 5})
+     * new _<Integer>(Arrays.asList(new Integer[] {1, 2, 3, 4, 5}))
      *   [...]
      *   .value(); // => Iterable
      * }</pre>
-     * @param values
+     * @param values the values that should be wrapped
      */
     public _(Iterable<T> values) {
         mValues = values;
@@ -51,7 +51,7 @@ public final class _ <T> {
      * <p>calls {@code function} on each value in {@code values}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.each(new int[] {1, 2, 3, 4}, new Fn<Integer, Void>() {
+     * _.each(Arrays.asList(new Integer[] {1, 2, 3, 4}), new Fn<Integer, Void>() {
      *     public Void apply(Integer in) {
      *         System.out.print("." + in + " ");
      *     }
@@ -77,7 +77,7 @@ public final class _ <T> {
      * <p>creates a {@link List} of the results of applying {@code function} to all {@code values}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.map(new int[] {1, 2, 3, 4}, new Fn<Integer, Integer>() {
+     * _.map(Arrays.asList(new Integer[] {1, 2, 3, 4}), new Fn<Integer, Integer>() {
      *     public Integer apply(Integer x) {
      *         return x * x;
      *     }
@@ -100,14 +100,14 @@ public final class _ <T> {
 
     /** @see #map(Iterable, Fn) */
     public <Out> _<Out> map(Fn<T, Out> function) {
-        return new _(_.map(mValues, function));
+        return new _<Out>(_.map(mValues, function));
     }
 
     /**
      * <p>creates a {@link List} of all {@code values} that match {@code predicate}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.filter(new int[] {1, 2, 3, 4}, new Fn<Integer, Boolean>() {
+     * _.filter(Arrays.asList(new Integer[] {1, 2, 3, 4}), new Fn<Integer, Boolean>() {
      *     public Boolean apply(Integer x) {
      *         return x % 2 == 0;
      *     }
@@ -129,7 +129,7 @@ public final class _ <T> {
 
     /** @see #filter(Iterable, Fn) */
     public _<T> filter(Fn<T, Boolean> predicate) {
-        return new _(_.filter(mValues, predicate));
+        return new _<T>(_.filter(mValues, predicate));
     }
 
     /**
@@ -137,7 +137,7 @@ public final class _ <T> {
      * <p>(this is also known as {@code foldl}, {@code reducel}, {@code foldLeft} or {@code reduceLeft}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.reduce(new int[] {1, 2, 3, 4}, new BinaryFn<Integer, Integer, Integer>() {
+     * _.reduce(Arrays.asList(new Integer[] {1, 2, 3, 4}), new BinaryFn<Integer, Integer, Integer>() {
      *     public Integer apply(Integer a, Integer b) {
      *         return a + b;
      *     }
@@ -146,7 +146,7 @@ public final class _ <T> {
      * </pre>
      * <p>to make it clear that this is a {@code foldl}, take this example:</p>
      * <pre>
-     * _.reduce(new int[] {1, 2, 3, 4}, new BinaryFn<Integer, Integer, Integer>() {
+     * _.reduce(Arrays.asList(new Integer[] {1, 2, 3, 4}), new BinaryFn<Integer, Integer, Integer>() {
      *     public Integer apply(Integer a, Integer b) {
      *         return a - b;
      *     }
@@ -197,7 +197,7 @@ public final class _ <T> {
      * <p>uses {@code equals} to determine equality.</p>
      * <p>e.g.</p>
      * <pre>{@code
-     * _.contains(new String[] {"abcde", "fghij"}, "c", new BinaryFn<String, String, Boolean>() {
+     * _.contains(Arrays.asList(new String[] {"abcde", "fghij"}), "c", new BinaryFn<String, String, Boolean>() {
      *     // tests if any value in the haystack contains the needle
      *     public Boolean apply(String hay, String needle) {
      *         return hay.contains(needle);
