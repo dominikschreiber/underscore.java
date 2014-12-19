@@ -124,4 +124,29 @@ public class _Test {
 
         assertTrue(1 + 2 + 3 + 4 + 5 == result);
     }
+
+    @Test
+    public void chainedComplexWithSumOfEvenSquares() {
+        Integer sumOfEvenSquares = new _<Integer>(range(11))
+                .map(new Fn<Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer input) {
+                        return input * input;
+                    }
+                })
+                .filter(new Fn<Integer, Boolean>() {
+                    @Override
+                    public Boolean apply(Integer input) {
+                        return input % 2 == 0;
+                    }
+                })
+                .reduce(new BinaryFn<Integer, Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer current, Integer sum) {
+                        return current + sum;
+                    }
+                }, 0);
+
+        assertTrue(4 + 16 + 36 + 64 + 100 == sumOfEvenSquares);
+    }
 }
