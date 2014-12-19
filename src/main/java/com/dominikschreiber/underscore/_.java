@@ -68,7 +68,7 @@ public final class _ <T> {
     }
 
     /** @see #each(Iterable, Fn) */
-    public _ each(Fn<T, Void> function) {
+    public _<T> each(Fn<T, Void> function) {
         _.each(mValues, function);
         return this;
     }
@@ -99,7 +99,7 @@ public final class _ <T> {
     }
 
     /** @see #map(Iterable, Fn) */
-    public <Out> _ map(Fn<T, Out> function) {
+    public <Out> _<Out> map(Fn<T, Out> function) {
         return new _(_.map(mValues, function));
     }
 
@@ -128,7 +128,7 @@ public final class _ <T> {
     }
 
     /** @see #filter(Iterable, Fn) */
-    public _ filter(Fn<T, Boolean> predicate) {
+    public _<T> filter(Fn<T, Boolean> predicate) {
         return new _(_.filter(mValues, predicate));
     }
 
