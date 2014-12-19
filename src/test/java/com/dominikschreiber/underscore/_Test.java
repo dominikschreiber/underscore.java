@@ -38,6 +38,19 @@ public class _Test {
     }
 
     @Test
+    public void chainedEachWithStringBuilder() {
+        final StringBuilder result = new StringBuilder();
+        new _<Integer>(range(6))
+                .each(new Fn<Integer, Void>() {
+                    public Void apply(Integer input) {
+                        result.append(Integer.toString(input, 10));
+                        return null;
+                    }
+                });
+        assertEquals("12345", result.toString());
+    }
+
+    @Test
     public void staticMapWithSquare() {
         List<Integer> result = _.map(range(6), new Fn<Integer, Integer>() {
             @Override
@@ -45,6 +58,20 @@ public class _Test {
                 return input * input;
             }
         });
+
+        assertEquals(Arrays.asList(new Integer[] {1, 4, 9, 16, 25}), result);
+    }
+
+    @Test
+    public void chainedMapWithSquare() {
+        Iterable<Integer> result = new _<Integer>(range(6))
+                .map(new Fn<Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer input) {
+                        return input * input;
+                    }
+                })
+                .value();
 
         assertEquals(Arrays.asList(new Integer[] {1, 4, 9, 16, 25}), result);
     }
@@ -61,6 +88,19 @@ public class _Test {
     }
 
     @Test
+    public void chainedFilterWithIsEven() {
+        Iterable<Integer> result = new _<Integer>(range(6))
+                .filter(new Fn<Integer, Boolean>() {
+                    public Boolean apply(Integer input) {
+                        return input % 2 == 0;
+                    }
+                })
+                .value();
+
+        assertEquals(Arrays.asList(new Integer[] {2, 4}), result);
+    }
+
+    @Test
     public void staticReduceWithSum() {
         Integer result = _.reduce(range(6), new BinaryFn<Integer, Integer, Integer>() {
             @Override
@@ -68,6 +108,19 @@ public class _Test {
                 return prev + now;
             }
         }, 0);
+
+        assertTrue(1 + 2 + 3 + 4 + 5 == result);
+    }
+
+    @Test
+    public void chainedReduceWithSum() {
+        Integer result = new _<Integer>(range(6))
+                .reduce(new BinaryFn<Integer, Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer prev, Integer now) {
+                        return prev + now;
+                    }
+                }, 0);
 
         assertTrue(1 + 2 + 3 + 4 + 5 == result);
     }
