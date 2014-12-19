@@ -10,6 +10,25 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class _Test {
+    private Fn<Integer, Integer> square = new Fn<Integer, Integer>() {
+        @Override
+        public Integer apply(Integer input) {
+            return input * input;
+        }
+    };
+    private Fn<Integer, Boolean> isEven = new Fn<Integer, Boolean>() {
+        @Override
+        public Boolean apply(Integer input) {
+            return input % 2 == 0;
+        }
+    };
+    private BinaryFn<Integer, Integer, Integer> sum = new BinaryFn<Integer, Integer, Integer>() {
+        @Override
+        public Integer apply(Integer current, Integer sum) {
+            return current + sum;
+        }
+    };
+
     private List<Integer> range(int from, int to) {
         List<Integer> result = new ArrayList<Integer>(to - from + 1);
         for (int i = from; i < to; i++) {
@@ -52,12 +71,7 @@ public class _Test {
 
     @Test
     public void staticMapWithSquare() {
-        List<Integer> result = _.map(range(6), new Fn<Integer, Integer>() {
-            @Override
-            public Integer apply(Integer input) {
-                return input * input;
-            }
-        });
+        List<Integer> result = _.map(range(6), square);
 
         assertEquals(Arrays.asList(new Integer[] {1, 4, 9, 16, 25}), result);
     }
@@ -65,12 +79,7 @@ public class _Test {
     @Test
     public void chainedMapWithSquare() {
         Iterable<Integer> result = new _<Integer>(range(6))
-                .map(new Fn<Integer, Integer>() {
-                    @Override
-                    public Integer apply(Integer input) {
-                        return input * input;
-                    }
-                })
+                .map(square)
                 .value();
 
         assertEquals(Arrays.asList(new Integer[] {1, 4, 9, 16, 25}), result);
@@ -78,11 +87,7 @@ public class _Test {
 
     @Test
     public void staticFilterWithIsEven() {
-        List<Integer> result = _.filter(range(6), new Fn<Integer, Boolean>() {
-           public Boolean apply(Integer input) {
-               return input % 2 == 0;
-           }
-        });
+        List<Integer> result = _.filter(range(6), isEven);
 
         assertEquals(Arrays.asList(new Integer[] {2, 4}), result);
     }
@@ -90,11 +95,7 @@ public class _Test {
     @Test
     public void chainedFilterWithIsEven() {
         Iterable<Integer> result = new _<Integer>(range(6))
-                .filter(new Fn<Integer, Boolean>() {
-                    public Boolean apply(Integer input) {
-                        return input % 2 == 0;
-                    }
-                })
+                .filter(isEven)
                 .value();
 
         assertEquals(Arrays.asList(new Integer[] {2, 4}), result);
@@ -102,12 +103,7 @@ public class _Test {
 
     @Test
     public void staticReduceWithSum() {
-        Integer result = _.reduce(range(6), new BinaryFn<Integer, Integer, Integer>() {
-            @Override
-            public Integer apply(Integer current, Integer sum) {
-                return current + sum;
-            }
-        }, 0);
+        Integer result = _.reduce(range(6), sum, 0);
 
         assertTrue(1 + 2 + 3 + 4 + 5 == result);
     }
@@ -115,12 +111,7 @@ public class _Test {
     @Test
     public void chainedReduceWithSum() {
         Integer result = new _<Integer>(range(6))
-                .reduce(new BinaryFn<Integer, Integer, Integer>() {
-                    @Override
-                    public Integer apply(Integer current, Integer sum) {
-                        return current + sum;
-                    }
-                }, 0);
+                .reduce(sum, 0);
 
         assertTrue(1 + 2 + 3 + 4 + 5 == result);
     }
@@ -128,24 +119,9 @@ public class _Test {
     @Test
     public void chainedComplexWithSumOfEvenSquares() {
         Integer sumOfEvenSquares = new _<Integer>(range(11))
-                .map(new Fn<Integer, Integer>() {
-                    @Override
-                    public Integer apply(Integer input) {
-                        return input * input;
-                    }
-                })
-                .filter(new Fn<Integer, Boolean>() {
-                    @Override
-                    public Boolean apply(Integer input) {
-                        return input % 2 == 0;
-                    }
-                })
-                .reduce(new BinaryFn<Integer, Integer, Integer>() {
-                    @Override
-                    public Integer apply(Integer current, Integer sum) {
-                        return current + sum;
-                    }
-                }, 0);
+                .map(square)
+                .filter(isEven)
+                .reduce(sum, 0);
 
         assertTrue(4 + 16 + 36 + 64 + 100 == sumOfEvenSquares);
     }
