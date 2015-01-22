@@ -8,6 +8,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class _Test {
     private Fn<Integer, Integer> square = new Fn<Integer, Integer>() {
@@ -124,5 +125,62 @@ public class _Test {
                 .reduce(sum, 0);
 
         assertTrue(4 + 16 + 36 + 64 + 100 == sumOfEvenSquares);
+    }
+
+    @Test
+    public void extendWithNothing() {
+        Datastore defaults = datastore(0, 1);
+        Datastore options = datastore(null, null);
+        Datastore expected = datastore(defaults.a, defaults.b);
+
+        try {
+            Datastore result = _.extend(defaults, options);
+            assertEquals(expected.a, result.a);
+            assertEquals(expected.b, result.b);
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void extendWithOverrides() {
+        Datastore defaults = datastore(0, 1);
+        Datastore options = datastore(2, 3);
+        Datastore expected = datastore(options.a, options.b);
+
+        try {
+            Datastore result = _.extend(defaults, options);
+            assertEquals(expected.a, result.a);
+            assertEquals(expected.b, result.b);
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void extendWithPartialOverrides() {
+        Datastore defaults = datastore(0, 1);
+        Datastore options = datastore(null, 3);
+        Datastore expected = datastore(defaults.a, options.b);
+
+        try {
+            Datastore result = _.extend(defaults, options);
+            assertEquals(expected.a, result.a);
+            assertEquals(expected.b, result.b);
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    private Datastore datastore(Integer a, Integer b) {
+        Datastore result = new Datastore();
+        result.a = a;
+        result.b = b;
+        return result;
+    }
+
+    private class Datastore {
+        public Integer a;
+        public Integer b;
     }
 }
