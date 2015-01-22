@@ -1,5 +1,6 @@
 package com.dominikschreiber.underscore;
 
+import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -203,6 +204,7 @@ public final class _ <T> {
      *         return hay.contains(needle);
      *     }
      * });
+     * // => true ("abcde" contains "c")
      * }</pre>
      * @param haystack the values that should contain {@code needle}
      * @param needle the value to be found in {@code haystack}
@@ -219,5 +221,40 @@ public final class _ <T> {
             }
         }
         return false;
+    }
+
+    /**
+     * <p>extends public fields in {@code defaults} with values in {@code options} if they are not {@code null}.</p>
+     * <p>e.g.</p>
+     * <pre>{@code
+     * _.extend(datastore(0, 1), datastore(null, 2));
+     * // => datastore(0, 2);
+     * // with definitions
+     * class Datastore {
+     *     public Integer a;
+     *     public Integer b;
+     * }
+     * datastore(Integer a, Integer b) {
+     *     Datastore result = new Datastore();
+     *     result.a = a;
+     *     result.b = b;
+     *     return result;
+     * }
+     * }</pre>
+     * <p>alters values of {@code defaults}, does not create a copy and work on it</p>
+     * @param defaults
+     * @param options
+     * @param <Datastore>
+     * @return
+     * @throws IllegalAccessException
+     * @throws NoSuchFieldException
+     */
+    public static <Datastore> Datastore extend(Datastore defaults, Datastore options) throws IllegalAccessException, NoSuchFieldException {
+        for (Field field : options.getClass().getFields()) {
+            if (field.get(options) != null) {
+                defaults.getClass().getField(field.getName()).set(defaults, field.get(options));
+            }
+        }
+        return defaults;
     }
 }
