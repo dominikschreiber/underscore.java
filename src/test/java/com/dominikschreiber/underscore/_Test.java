@@ -138,7 +138,7 @@ public class _Test {
             assertEquals(expected.a, result.a);
             assertEquals(expected.b, result.b);
         } catch (Exception e) {
-            fail();
+            fail(e.getMessage());
         }
     }
 
@@ -153,7 +153,7 @@ public class _Test {
             assertEquals(expected.a, result.a);
             assertEquals(expected.b, result.b);
         } catch (Exception e) {
-            fail();
+            fail(e.getMessage());
         }
     }
 
@@ -168,7 +168,7 @@ public class _Test {
             assertEquals(expected.a, result.a);
             assertEquals(expected.b, result.b);
         } catch (Exception e) {
-            fail();
+            fail(e.getMessage());
         }
     }
 
@@ -179,8 +179,67 @@ public class _Test {
         return result;
     }
 
-    private class Datastore {
+    private static class Datastore {
         public Integer a;
         public Integer b;
+    }
+
+    @Test
+    public void extendWithPartialOverridesAndMethodsInDatastore() {
+        MethodDatastore defaults = methodDatastore(0, 1);
+        MethodDatastore options = methodDatastore(null, 3);
+        MethodDatastore expected = methodDatastore(defaults.a, options.b);
+
+        try {
+            MethodDatastore result = _.extend(defaults, options);
+            assertEquals(expected.a, result.a);
+            assertEquals(expected.b, result.b);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    private MethodDatastore methodDatastore(Integer a, Integer b) {
+        MethodDatastore result = new MethodDatastore();
+        result.a = a;
+        result.b = b;
+        return result;
+    }
+
+    private static class MethodDatastore extends Datastore {
+        public void foo() {}
+    }
+
+    @Test
+    public void extendWithPartialOverridesAndBuilderInDatastore() {
+        BuilderDatastore defaults = new BuilderDatastore.Builder()
+                .setA(0)
+                .setB(1)
+                .build();
+        BuilderDatastore options = new BuilderDatastore.Builder()
+                .setA(null)
+                .setB(2)
+                .build();
+        BuilderDatastore expected = new BuilderDatastore.Builder()
+                .setA(defaults.a)
+                .setB(options.b)
+                .build();
+
+        try {
+            BuilderDatastore result = _.extend(defaults, options);
+            assertEquals(expected.a, result.a);
+            assertEquals(expected.b, result.b);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    private static class BuilderDatastore extends Datastore {
+        public static class Builder {
+            private BuilderDatastore store = new BuilderDatastore();
+            public Builder setA(Integer a) { store.a = a; return this; }
+            public Builder setB(Integer b) { store.b = b; return this; }
+            public BuilderDatastore build() { return store; }
+        }
     }
 }
