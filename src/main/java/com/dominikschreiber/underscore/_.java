@@ -322,6 +322,49 @@ public final class _ <T> {
         return initial(1);
     }
 
+    // ----- .last ---------------------------------------------------------------------------------
+
+    /**
+     * <p>returns the last {@code n} elements of {@code values}</p>
+     * <p>e.g.</p>
+     * <pre>{@code
+     * _.last(Arrays.asList(new String[] {"foo", "bar", "baz"}), 2);
+     * // => ["bar", "baz"]
+     * }</pre>
+     * @param values the values to take the last {@code n} from
+     * @param n the number of values to take from {@code values}, defaults to 1
+     * @return the last {@code n} {@code values}
+     */
+    public static <In> Iterable<In> last(Iterable<In> values, int n) {
+        List<In> last = new ArrayList<In>();
+        int limit = _.size(values) - n;
+
+        int i = 0;
+        for (In value : values) {
+            if (i >= limit) {
+                last.add(value);
+            }
+            i += 1;
+        }
+
+        return last;
+    }
+
+    /** @see #last(Iterable, int) */
+    public static <In> Iterable<In> last(Iterable<In> values) {
+        return _.last(values, 1);
+    }
+
+    /** @see #last(Iterable, int) */
+    public _<T> last(int n) {
+        return new _<T>(_.last(mValues, n));
+    }
+
+    /** @see #last(int) */
+    public _<T> last() {
+        return last(1);
+    }
+
     // ===== ~Objects ==============================================================================
 
     /**
