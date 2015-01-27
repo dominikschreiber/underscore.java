@@ -288,6 +288,40 @@ public class _Test {
         );
     }
 
+    // ----- _.rest --------------------------------------------------------------------------------
+
+    @Test
+    public void staticRest() {
+        assertEquals(
+                range(3, 5),
+                _.rest(range(5), 2)
+        );
+    }
+
+    @Test
+    public void staticRestDefaultN() {
+        assertEquals(
+                range(2, 5),
+                _.rest(range(5))
+        );
+    }
+
+    @Test
+    public void chainedRest() {
+        assertEquals(
+                range(3, 5),
+                new _<Integer>(range(5)).rest(2).value()
+        );
+    }
+
+    @Test
+    public void chainedRestDefaultN() {
+        assertEquals(
+                range(2, 5),
+                new _<Integer>(range(5)).rest().value()
+        );
+    }
+
     // ----- _.extend ------------------------------------------------------------------------------
 
     @Test
