@@ -254,6 +254,40 @@ public class _Test {
         );
     }
 
+    // ----- _.last --------------------------------------------------------------------------------
+
+    @Test
+    public void staticLast() {
+        assertEquals(
+                range(4, 6),
+                _.last(range(6), 2)
+        );
+    }
+
+    @Test
+    public void staticLastDefaultN() {
+        assertEquals(
+                range(4, 5),
+                _.last(range(5))
+        );
+    }
+
+    @Test
+    public void chainedLast() {
+        assertEquals(
+                range(4, 6),
+                new _<Integer>(range(6)).last(2).value()
+        );
+    }
+
+    @Test
+    public void chainedLastDefaultN() {
+        assertEquals(
+                range(4, 5),
+                new _<Integer>(range(5)).last().value()
+        );
+    }
+
     // ----- _.extend ------------------------------------------------------------------------------
 
     @Test
