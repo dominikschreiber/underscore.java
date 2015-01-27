@@ -168,18 +168,90 @@ public class _Test {
         assertFalse(new _<String>(Arrays.asList(new String[] {"foo", "bar"})).contains("baz", stringEquals));
     }
 
+    // ----- _.size --------------------------------------------------------------------------------
+
+    @Test
+    public void staticSize() {
+        assertEquals(
+                3,
+                _.size(range(4))
+        );
+    }
+
+    @Test
+    public void chainedSize() {
+        assertEquals(
+                3,
+                new _<Integer>(range(4)).size()
+        );
+    }
+
     // ----- _.first -------------------------------------------------------------------------------
 
     @Test
     public void staticFirst() {
-        Iterable<Integer> result = _.first(range(5), 3);
-        assertEquals(result, range(4));
+        assertEquals(
+                range(4),
+                _.first(range(5), 3)
+        );
+    }
+
+    @Test
+    public void staticFirstDefaultN() {
+        assertEquals(
+                range(2),
+                _.first(range(5))
+        );
     }
 
     @Test
     public void chainedFirst() {
-        Iterable<Integer> result = new _<Integer>(range(5)).first(3).value();
-        assertEquals(result, range(4));
+        assertEquals(
+                range(4),
+                new _<Integer>(range(5)).first(3).value()
+        );
+    }
+
+    @Test
+    public void chainedFirstDefaultN() {
+        assertEquals(
+                range(2),
+                new _<Integer>(range(5)).first().value()
+        );
+    }
+
+    // ----- _.initial -----------------------------------------------------------------------------
+
+    @Test
+    public void staticInitial() {
+        assertEquals(
+                Arrays.asList(new String[] {"foo"}),
+                _.initial(Arrays.asList(new String[] {"foo", "bar", "baz"}), 2)
+        );
+    }
+
+    @Test
+    public void staticInitialDefaultN() {
+        assertEquals(
+                Arrays.asList(new String[] {"foo", "bar"}),
+                _.initial(Arrays.asList(new String[] {"foo", "bar", "baz"}))
+        );
+    }
+
+    @Test
+    public void chainedInitial() {
+        assertEquals(
+                Arrays.asList(new String[] {"foo"}),
+                new _<String>(Arrays.asList(new String[] {"foo", "bar", "baz"})).initial(2).value()
+        );
+    }
+
+    @Test
+    public void chainedInitialDefaultN() {
+        assertEquals(
+                Arrays.asList(new String[] {"foo", "bar"}),
+                new _<String>(Arrays.asList(new String[] {"foo", "bar", "baz"})).initial().value()
+        );
     }
 
     // ----- _.extend ------------------------------------------------------------------------------
