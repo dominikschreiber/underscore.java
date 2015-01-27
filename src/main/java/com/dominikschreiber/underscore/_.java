@@ -365,6 +365,24 @@ public final class _ <T> {
         return last(1);
     }
 
+    // ----- _.rest --------------------------------------------------------------------------------
+
+    public static <In> Iterable<In> rest(Iterable<In> values, int startindex) {
+        return _.last(values, _.size(values) - startindex);
+    }
+
+    public static <In> Iterable<In> rest(Iterable<In> values) {
+        return _.rest(values, 1);
+    }
+
+    public _<T> rest(int startindex) {
+        return new _<T>(_.rest(mValues, startindex));
+    }
+
+    public _<T> rest() {
+        return rest(1);
+    }
+
     // ===== ~Objects ==============================================================================
 
     /**
