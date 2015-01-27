@@ -1,7 +1,8 @@
 package com.dominikschreiber.underscore;
 
 import java.lang.reflect.Field;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -93,7 +94,7 @@ public final class _ <T> {
      * applied to all elements of {@code values}
      */
     public static <In, Out> List<Out> map(Iterable<In> values, Fn<In, Out> function) {
-        List<Out> result = new LinkedList<Out>();
+        List<Out> result = new ArrayList<Out>();
         for (In value : values)
             result.add(function.apply(value));
         return result;
@@ -121,7 +122,7 @@ public final class _ <T> {
      * @return a List of all {@code values} that match {@code predicate}
      */
     public static <In> List<In> filter(Iterable<In> values, Fn<In, Boolean> predicate) {
-        List<In> result = new LinkedList<In>();
+        List<In> result = new ArrayList<In>();
         for (In value : values)
             if (predicate.apply(value))
                 result.add(value);
@@ -176,6 +177,8 @@ public final class _ <T> {
         return _.reduce(mValues, combine, init);
     }
 
+    // ----- _.contains ----------------------------------------------------------------------------
+
     /**
      * <p>returns {@code true} if the {@code needle} is present in {@code haystack}.</p>
      * <p>Uses {@code Object.equals()} to determine equality.</p>
@@ -191,6 +194,11 @@ public final class _ <T> {
                 return a.equals(b);
             }
         });
+    }
+
+    /** @see #contains(Iterable, Object) */
+    public boolean contains(T needle) {
+        return _.contains(mValues, needle);
     }
 
     /**
@@ -222,6 +230,43 @@ public final class _ <T> {
         }
         return false;
     }
+
+    /** @see #contains(Iterable, Object, BinaryFn) */
+    public boolean contains(T needle, BinaryFn<T, T, Boolean> equals) {
+        return _.contains(mValues, needle, equals);
+    }
+
+    // ----- _.first -------------------------------------------------------------------------------
+
+    /**
+     * <p>returns the first {@code n} elements of {@code values}</p>
+     * <p>e.g.</p>
+     * <pre>{@code
+     * _.first(Arrays.asList(new Integer[] {1, 2, 3, 4, 5}), 2);
+     * // => [1, 2]
+     * }</pre>
+     * @param values
+     * @param n
+     * @param <In>
+     * @return
+     */
+    public static <In> Iterable<In> first(Iterable<In> values, int n) {
+        List<In> first = new ArrayList<In>();
+        Iterator<In> iterator = values.iterator();
+
+        for (int i = 0; i < n && iterator.hasNext(); i++) {
+            first.add(iterator.next());
+        }
+
+        return first;
+    }
+
+    /** @see #first(Iterable, int)  */
+    public _<T> first(int n) {
+        return new _<T>(_.first(mValues, n));
+    }
+
+    // ===== ~Objects ==============================================================================
 
     /**
      * <p>extends public fields in {@code defaults} with values in {@code options} if they are not {@code null}.</p>
