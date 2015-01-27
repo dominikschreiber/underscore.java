@@ -236,6 +236,26 @@ public final class _ <T> {
         return _.contains(mValues, needle, equals);
     }
 
+    // ----- _.size --------------------------------------------------------------------------------
+
+    /**
+     * <p>returns the number of values in {@code values}</p>
+     * @param values the values to be counted
+     * @return the number of values
+     */
+    public static <In> int size(Iterable<In> values) {
+        int size = 0;
+        for (In value : values) {
+            size += 1;
+        }
+        return size;
+    }
+
+    /** @see #size(Iterable) */
+    public int size() {
+        return _.size(mValues);
+    }
+
     // ----- _.first -------------------------------------------------------------------------------
 
     /**
@@ -251,7 +271,7 @@ public final class _ <T> {
      * @return
      */
     public static <In> Iterable<In> first(Iterable<In> values, int n) {
-        List<In> first = new ArrayList<In>();
+        List<In> first = new ArrayList<In>(n);
         Iterator<In> iterator = values.iterator();
 
         for (int i = 0; i < n && iterator.hasNext(); i++) {
@@ -262,8 +282,44 @@ public final class _ <T> {
     }
 
     /** @see #first(Iterable, int)  */
+    public static <In> Iterable<In> first(Iterable<In> values) {
+        return _.first(values, 1);
+    }
+
+    /** @see #first(Iterable, int)  */
     public _<T> first(int n) {
         return new _<T>(_.first(mValues, n));
+    }
+
+    /** @see #first(int) */
+    public _<T> first() {
+        return first(1);
+    }
+
+    // ----- _.initial -----------------------------------------------------------------------------
+
+    public static <In> Iterable<In> initial(Iterable<In> values, int n) {
+        List<In> initial = new ArrayList<In>();
+        Iterator<In> iterator = values.iterator();
+        int limit = _.size(values) - n;
+
+        for (int i = 0; i < limit && iterator.hasNext(); i++) {
+            initial.add(iterator.next());
+        }
+
+        return initial;
+    }
+
+    public static <In> Iterable<In> initial(Iterable<In> values) {
+        return _.initial(values, 1);
+    }
+
+    public _<T> initial(int n) {
+        return new _<T>(_.initial(mValues, n));
+    }
+
+    public _<T> initial() {
+        return initial(1);
     }
 
     // ===== ~Objects ==============================================================================
