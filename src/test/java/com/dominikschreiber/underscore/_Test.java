@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -29,6 +30,12 @@ public class _Test {
             return current + sum;
         }
     };
+    private BinaryFn<String, String, Boolean> stringEquals = new BinaryFn<String, String, Boolean>() {
+        @Override
+        public Boolean apply(String a, String b) {
+            return a.equals(b);
+        }
+    };
 
     private List<Integer> range(int from, int to) {
         List<Integer> result = new ArrayList<Integer>(to - from + 1);
@@ -41,6 +48,8 @@ public class _Test {
     private List<Integer> range(int to) {
         return range(1, to);
     }
+
+    // ----- _.each --------------------------------------------------------------------------------
 
     @Test
     public void staticEachWithStringBuilder() {
@@ -70,6 +79,8 @@ public class _Test {
         assertEquals("12345", result.toString());
     }
 
+    // ----- _.map ---------------------------------------------------------------------------------
+
     @Test
     public void staticMapWithSquare() {
         List<Integer> result = _.map(range(6), square);
@@ -86,6 +97,8 @@ public class _Test {
         assertEquals(Arrays.asList(new Integer[] {1, 4, 9, 16, 25}), result);
     }
 
+    // ----- _.filter ------------------------------------------------------------------------------
+
     @Test
     public void staticFilterWithIsEven() {
         List<Integer> result = _.filter(range(6), isEven);
@@ -101,6 +114,8 @@ public class _Test {
 
         assertEquals(Arrays.asList(new Integer[] {2, 4}), result);
     }
+
+    // ----- _.reduce ------------------------------------------------------------------------------
 
     @Test
     public void staticReduceWithSum() {
@@ -126,6 +141,48 @@ public class _Test {
 
         assertTrue(4 + 16 + 36 + 64 + 100 == sumOfEvenSquares);
     }
+
+    // ---- _.contains -----------------------------------------------------------------------------
+
+    @Test
+    public void staticContainsWithIntegers() {
+        assertTrue(_.contains(range(6), 4));
+        assertFalse(_.contains(range(4), 6));
+    }
+
+    @Test
+    public void chainedContainsWithIntegers() {
+        assertTrue(new _<Integer>(range(6)).contains(4));
+        assertFalse(new _<Integer>(range(4)).contains(6));
+    }
+
+    @Test
+    public void staticContainsWithStringEquals() {
+        assertTrue(_.contains(Arrays.asList(new String[] {"foo", "bar", "baz"}), "foo", stringEquals));
+        assertFalse(_.contains(Arrays.asList(new String[] {"foo", "bar"}), "baz", stringEquals));
+    }
+
+    @Test
+    public void chainedContainsWithStringEquals() {
+        assertTrue(new _<String>(Arrays.asList(new String[] {"foo", "bar", "baz"})).contains("foo", stringEquals));
+        assertFalse(new _<String>(Arrays.asList(new String[] {"foo", "bar"})).contains("baz", stringEquals));
+    }
+
+    // ----- _.first -------------------------------------------------------------------------------
+
+    @Test
+    public void staticFirst() {
+        Iterable<Integer> result = _.first(range(5), 3);
+        assertEquals(result, range(4));
+    }
+
+    @Test
+    public void chainedFirst() {
+        Iterable<Integer> result = new _<Integer>(range(5)).first(3).value();
+        assertEquals(result, range(4));
+    }
+
+    // ----- _.extend ------------------------------------------------------------------------------
 
     @Test
     public void extendWithNothing() {
