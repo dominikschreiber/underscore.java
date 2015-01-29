@@ -49,6 +49,8 @@ public final class _ <T> {
         return mValues;
     }
 
+    // ----- _.each --------------------------------------------------------------------------------
+
     /**
      * <p>calls {@code function} on each value in {@code values}</p>
      * <p>i.e.</p>
@@ -74,6 +76,8 @@ public final class _ <T> {
         _.each(mValues, function);
         return this;
     }
+
+    // ----- _.map ---------------------------------------------------------------------------------
 
     /**
      * <p>creates a {@link List} of the results of applying {@code function} to all {@code values}</p>
@@ -105,6 +109,8 @@ public final class _ <T> {
         return new _<Out>(_.map(mValues, function));
     }
 
+    // ----- _.filter ------------------------------------------------------------------------------
+
     /**
      * <p>creates a {@link List} of all {@code values} that match {@code predicate}</p>
      * <p>i.e.</p>
@@ -133,6 +139,39 @@ public final class _ <T> {
     public _<T> filter(Fn<T, Boolean> predicate) {
         return new _<T>(_.filter(mValues, predicate));
     }
+
+    // ----- _.find --------------------------------------------------------------------------------
+
+    /**
+     * <p>looks through the {@code values}, returns the first value that matches {@code predicate}.
+     * Breaks once the first matching value is found (does not traverse the whole list then).</p>
+     * <p>e.g.</p>
+     * <pre>{@code
+     * _.find(Arrays.asList(new Integer[] {1,2,3,4,5}, new Fn<Integer, Boolean>() {
+     *     public Boolean apply(Integer x) {
+     *         return x % 2 == 0;
+     *     }
+     * });
+     * // => 2
+     * }</pre>
+     * @param values
+     * @param predicate
+     * @param <In>
+     * @return
+     */
+    public static <In> In find(Iterable<In> values, Fn<In, Boolean> predicate) {
+        for (In value : values)
+            if (predicate.apply(value))
+                return value;
+        return null;
+    }
+
+    /** @see #find(Iterable, Fn) */
+    public T find(Fn<T, Boolean> predicate) {
+        return _.find(mValues, predicate);
+    }
+
+    // ----- _.reduce ------------------------------------------------------------------------------
 
     /**
      * <p>reduces the {@code values} to a single value of type {@code <Out>}</p>
