@@ -115,6 +115,24 @@ public class _Test {
         assertEquals(Arrays.asList(new Integer[] {2, 4}), result);
     }
 
+    // ----- _.find --------------------------------------------------------------------------------
+
+    @Test
+    public void staticFindWithIsEven() {
+        assertEquals(
+                2,
+                (int) _.find(range(6), isEven)
+        );
+    }
+
+    @Test
+    public void chainedFindWithIsEven() {
+        assertEquals(
+                2,
+                (int) new _<Integer>(range(6)).find(isEven)
+        );
+    }
+
     // ----- _.reduce ------------------------------------------------------------------------------
 
     @Test
