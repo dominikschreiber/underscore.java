@@ -2,6 +2,7 @@ package com.dominikschreiber.underscore;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -67,6 +68,8 @@ public final class _ <T> {
      * @param <In> type of the elements in {@code values}
      */
     public static <In> void each(Iterable<In> values, Fn<In, Void> function) {
+        if (values == null) return;
+
         for (In value : values)
             function.apply(value);
     }
@@ -98,6 +101,8 @@ public final class _ <T> {
      * applied to all elements of {@code values}
      */
     public static <In, Out> List<Out> map(Iterable<In> values, Fn<In, Out> function) {
+        if (values == null) return Collections.emptyList();
+
         List<Out> result = new ArrayList<Out>();
         for (In value : values)
             result.add(function.apply(value));
@@ -128,7 +133,9 @@ public final class _ <T> {
      * @return a List of all {@code values} that match {@code predicate}
      */
     public static <In> List<In> filter(Iterable<In> values, Fn<In, Boolean> predicate) {
-        List<In> result = new ArrayList<In>();
+        if (values == null) return Collections.emptyList();
+
+        List<In> result = new ArrayList<>();
         for (In value : values)
             if (predicate.apply(value))
                 result.add(value);
@@ -160,6 +167,8 @@ public final class _ <T> {
      * @return
      */
     public static <In> In find(Iterable<In> values, Fn<In, Boolean> predicate) {
+        if (values == null) return null;
+
         for (In value : values)
             if (predicate.apply(value))
                 return value;
@@ -203,6 +212,8 @@ public final class _ <T> {
      * @return a value of type {@code <Out>} obtained by reducing {@code values} using {@combine} to a single value
      */
     public static <In, Out> Out reduce(Iterable<In> values, BinaryFn<In, Out, Out> combine, Out init) {
+        if (values == null) return init;
+
         Out result = init;
 
         for (In value : values)
@@ -262,6 +273,8 @@ public final class _ <T> {
      * @return {@code true} if {@code needle} is found in {@code haystack}
      */
     public static <In> boolean contains(Iterable<In> haystack, In needle, BinaryFn<In, In, Boolean> equals) {
+        if (haystack == null) return false;
+
         for (In hay : haystack) {
             if (equals.apply(hay, needle)) {
                 return true;
@@ -283,6 +296,8 @@ public final class _ <T> {
      * @return the number of values
      */
     public static <In> int size(Iterable<In> values) {
+        if (values == null) return 0;
+
         int size = 0;
         for (In value : values) {
             size += 1;
@@ -309,7 +324,9 @@ public final class _ <T> {
      * @param <In>
      * @return
      */
-    public static <In> Iterable<In> first(Iterable<In> values, int n) {
+    public static <In> List<In> first(Iterable<In> values, int n) {
+        if (values == null) return Collections.emptyList();
+
         List<In> first = new ArrayList<In>(n);
         Iterator<In> iterator = values.iterator();
 
@@ -321,7 +338,7 @@ public final class _ <T> {
     }
 
     /** @see #first(Iterable, int)  */
-    public static <In> Iterable<In> first(Iterable<In> values) {
+    public static <In> List<In> first(Iterable<In> values) {
         return _.first(values, 1);
     }
 
@@ -337,8 +354,10 @@ public final class _ <T> {
 
     // ----- _.initial -----------------------------------------------------------------------------
 
-    public static <In> Iterable<In> initial(Iterable<In> values, int n) {
-        List<In> initial = new ArrayList<In>();
+    public static <In> List<In> initial(Iterable<In> values, int n) {
+        if (values == null) return Collections.emptyList();
+
+        List<In> initial = new ArrayList<>();
         Iterator<In> iterator = values.iterator();
         int limit = _.size(values) - n;
 
@@ -349,7 +368,7 @@ public final class _ <T> {
         return initial;
     }
 
-    public static <In> Iterable<In> initial(Iterable<In> values) {
+    public static <In> List<In> initial(Iterable<In> values) {
         return _.initial(values, 1);
     }
 
@@ -374,8 +393,10 @@ public final class _ <T> {
      * @param n the number of values to take from {@code values}, defaults to 1
      * @return the last {@code n} {@code values}
      */
-    public static <In> Iterable<In> last(Iterable<In> values, int n) {
-        List<In> last = new ArrayList<In>();
+    public static <In> List<In> last(Iterable<In> values, int n) {
+        if (values == null) return Collections.emptyList();
+
+        List<In> last = new ArrayList<>();
         int limit = _.size(values) - n;
 
         int i = 0;
@@ -390,7 +411,7 @@ public final class _ <T> {
     }
 
     /** @see #last(Iterable, int) */
-    public static <In> Iterable<In> last(Iterable<In> values) {
+    public static <In> List<In> last(Iterable<In> values) {
         return _.last(values, 1);
     }
 
@@ -406,11 +427,11 @@ public final class _ <T> {
 
     // ----- _.rest --------------------------------------------------------------------------------
 
-    public static <In> Iterable<In> rest(Iterable<In> values, int startindex) {
+    public static <In> List<In> rest(Iterable<In> values, int startindex) {
         return _.last(values, _.size(values) - startindex);
     }
 
-    public static <In> Iterable<In> rest(Iterable<In> values) {
+    public static <In> List<In> rest(Iterable<In> values) {
         return _.rest(values, 1);
     }
 
@@ -423,6 +444,8 @@ public final class _ <T> {
     }
 
     // ===== ~Objects ==============================================================================
+
+    // ----- _.extend ------------------------------------------------------------------------------
 
     /**
      * <p>extends public fields in {@code defaults} with values in {@code options} if they are not {@code null}.</p>
@@ -457,5 +480,34 @@ public final class _ <T> {
             }
         }
         return defaults;
+    }
+
+    // ----- _.list ----------------------------------------------------------------------------
+
+    /**
+     * <p>Creates a list of the values passed as arguments. E.g.</p>
+     * <pre>{@code
+     * _.list("foo", "bar", "baz")
+     * // => ["foo", "bar", "baz"]
+     * }</pre>
+     * <p>Without this function one would have written something like</p>
+     * <pre>{@code
+     * Arrays.asList(new String[] {"foo", "bar", "baz"})
+     * // => ["foo", "baz", "baz"]
+     * }</pre>
+     * <p>what would not allow e.g. adding items to the list</p>
+     * @param values the values to create a list from
+     * @param <In> the type the items in the list will have
+     * @return a list that contains exactly the values
+     */
+    @SafeVarargs
+    public static <In> List<In> list(In... values) {
+        if (values == null) return Collections.emptyList();
+
+        List<In> iterable = new ArrayList<>();
+        for (In value : values) {
+            iterable.add(value);
+        }
+        return iterable;
     }
 }
