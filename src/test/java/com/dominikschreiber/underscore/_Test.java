@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -67,9 +68,20 @@ public class _Test {
     }
 
     @Test
+    public void staticEachNullInput() {
+        _.each(null, new Fn<Object, Void>() {
+            @Override
+            public Void apply(Object input) {
+                return null;
+            }
+        });
+        // tests pass if no exception is thrown -- no need to Assert.pass()
+    }
+
+    @Test
     public void chainedEachWithStringBuilder() {
         final StringBuilder result = new StringBuilder();
-        new _<Integer>(range(6))
+        new _<>(range(6))
                 .each(new Fn<Integer, Void>() {
                     public Void apply(Integer input) {
                         result.append(Integer.toString(input, 10));
@@ -85,12 +97,17 @@ public class _Test {
     public void staticMapWithSquare() {
         List<Integer> result = _.map(range(6), square);
 
-        assertEquals(Arrays.asList(new Integer[] {1, 4, 9, 16, 25}), result);
+        assertEquals(_.list(1, 4, 9, 16, 25), result);
+    }
+
+    @Test
+    public void staticMapWithNullInput() {
+        assertEquals(Collections.emptyList(), _.map(null, square));
     }
 
     @Test
     public void chainedMapWithSquare() {
-        Iterable<Integer> result = new _<Integer>(range(6))
+        Iterable<Integer> result = new _<>(range(6))
                 .map(square)
                 .value();
 
@@ -107,12 +124,17 @@ public class _Test {
     }
 
     @Test
+    public void staticFilterWithNullInput() {
+        assertEquals(Collections.emptyList(), _.filter(null, isEven));
+    }
+
+    @Test
     public void chainedFilterWithIsEven() {
-        Iterable<Integer> result = new _<Integer>(range(6))
+        Iterable<Integer> result = new _<>(range(6))
                 .filter(isEven)
                 .value();
 
-        assertEquals(Arrays.asList(new Integer[] {2, 4}), result);
+        assertEquals(_.list(2, 4), result);
     }
 
     // ----- _.find --------------------------------------------------------------------------------
@@ -126,10 +148,15 @@ public class _Test {
     }
 
     @Test
+    public void staticFindWithNullInput() {
+        assertEquals(null, _.find(null, isEven));
+    }
+
+    @Test
     public void chainedFindWithIsEven() {
         assertEquals(
                 2,
-                (int) new _<Integer>(range(6)).find(isEven)
+                (int) new _<>(range(6)).find(isEven)
         );
     }
 
@@ -143,8 +170,16 @@ public class _Test {
     }
 
     @Test
+    public void staticReduceWithNullInput() {
+        assertEquals(
+                5,
+                (int) _.reduce(null, sum, 5)
+        );
+    }
+
+    @Test
     public void chainedReduceWithSum() {
-        Integer result = new _<Integer>(range(6))
+        Integer result = new _<>(range(6))
                 .reduce(sum, 0);
 
         assertTrue(1 + 2 + 3 + 4 + 5 == result);
@@ -152,7 +187,7 @@ public class _Test {
 
     @Test
     public void chainedComplexWithSumOfEvenSquares() {
-        Integer sumOfEvenSquares = new _<Integer>(range(11))
+        Integer sumOfEvenSquares = new _<>(range(11))
                 .map(square)
                 .filter(isEven)
                 .reduce(sum, 0);
@@ -169,72 +204,72 @@ public class _Test {
     }
 
     @Test
+    public void staticContainsWithNullInput() {
+        assertFalse(_.contains(null, "foo"));
+    }
+
+    @Test
     public void chainedContainsWithIntegers() {
-        assertTrue(new _<Integer>(range(6)).contains(4));
-        assertFalse(new _<Integer>(range(4)).contains(6));
+        assertTrue(new _<>(range(6)).contains(4));
+        assertFalse(new _<>(range(4)).contains(6));
     }
 
     @Test
     public void staticContainsWithStringEquals() {
-        assertTrue(_.contains(Arrays.asList(new String[] {"foo", "bar", "baz"}), "foo", stringEquals));
-        assertFalse(_.contains(Arrays.asList(new String[] {"foo", "bar"}), "baz", stringEquals));
+        assertTrue(_.contains(_.list("foo", "bar", "baz"), "foo", stringEquals));
+        assertFalse(_.contains(_.list("foo", "bar"), "baz", stringEquals));
     }
 
     @Test
     public void chainedContainsWithStringEquals() {
-        assertTrue(new _<String>(Arrays.asList(new String[] {"foo", "bar", "baz"})).contains("foo", stringEquals));
-        assertFalse(new _<String>(Arrays.asList(new String[] {"foo", "bar"})).contains("baz", stringEquals));
+        assertTrue(new _<>(_.list("foo", "bar", "baz")).contains("foo", stringEquals));
+        assertFalse(new _<>(_.list("foo", "bar")).contains("baz", stringEquals));
     }
 
     // ----- _.size --------------------------------------------------------------------------------
 
     @Test
     public void staticSize() {
-        assertEquals(
-                3,
-                _.size(range(4))
-        );
+        assertEquals(3, _.size(range(4)));
+    }
+
+    @Test
+    public void staticSizeWithNullInput() {
+        assertEquals(0, _.size(null));
     }
 
     @Test
     public void chainedSize() {
-        assertEquals(
-                3,
-                new _<Integer>(range(4)).size()
-        );
+        assertEquals(3, new _<>(range(4)).size());
     }
 
     // ----- _.first -------------------------------------------------------------------------------
 
     @Test
     public void staticFirst() {
-        assertEquals(
-                range(4),
-                _.first(range(5), 3)
-        );
+        assertEquals(range(4), _.first(range(5), 3));
+    }
+
+    @Test
+    public void staticFirstWithNullInput() {
+        assertEquals(Collections.emptyList(), _.first(null, 3));
     }
 
     @Test
     public void staticFirstDefaultN() {
-        assertEquals(
-                range(2),
-                _.first(range(5))
-        );
+        assertEquals(range(2), _.first(range(5)));
     }
 
     @Test
     public void chainedFirst() {
-        assertEquals(
-                range(4),
-                new _<Integer>(range(5)).first(3).value()
-        );
+        assertEquals(range(4),new _<>(range(5)).first(3).value());
     }
 
     @Test
     public void chainedFirstDefaultN() {
         assertEquals(
                 range(2),
-                new _<Integer>(range(5)).first().value()
+                new _<>(range(5)).first().value()
         );
     }
 
@@ -242,102 +277,76 @@ public class _Test {
 
     @Test
     public void staticInitial() {
-        assertEquals(
-                Arrays.asList(new String[] {"foo"}),
-                _.initial(Arrays.asList(new String[] {"foo", "bar", "baz"}), 2)
-        );
+        assertEquals(_.list("foo"), _.initial(_.list("foo", "bar", "baz"), 2));
+    }
+
+    @Test
+    public void staticInitialWithNullInput() {
+        assertEquals(Collections.emptyList(), _.initial(null, 2));
     }
 
     @Test
     public void staticInitialDefaultN() {
-        assertEquals(
-                Arrays.asList(new String[] {"foo", "bar"}),
-                _.initial(Arrays.asList(new String[] {"foo", "bar", "baz"}))
-        );
+        assertEquals(_.list("foo", "bar"), _.initial(_.list("foo", "bar", "baz")));
     }
 
     @Test
     public void chainedInitial() {
-        assertEquals(
-                Arrays.asList(new String[] {"foo"}),
-                new _<String>(Arrays.asList(new String[] {"foo", "bar", "baz"})).initial(2).value()
-        );
+        assertEquals(_.list("foo"), new _<>(_.list("foo", "bar", "baz")).initial(2).value());
     }
 
     @Test
     public void chainedInitialDefaultN() {
-        assertEquals(
-                Arrays.asList(new String[] {"foo", "bar"}),
-                new _<String>(Arrays.asList(new String[] {"foo", "bar", "baz"})).initial().value()
-        );
+        assertEquals(_.list("foo", "bar"), new _<>(_.list("foo", "bar", "baz")).initial().value());
     }
 
     // ----- _.last --------------------------------------------------------------------------------
 
     @Test
     public void staticLast() {
-        assertEquals(
-                range(4, 6),
-                _.last(range(6), 2)
-        );
+        assertEquals(range(4, 6), _.last(range(6), 2));
     }
 
     @Test
     public void staticLastDefaultN() {
-        assertEquals(
-                range(4, 5),
-                _.last(range(5))
-        );
+        assertEquals(range(4, 5), _.last(range(5)));
     }
 
     @Test
     public void chainedLast() {
-        assertEquals(
-                range(4, 6),
-                new _<Integer>(range(6)).last(2).value()
-        );
+        assertEquals(range(4, 6), new _<>(range(6)).last(2).value());
     }
 
     @Test
     public void chainedLastDefaultN() {
-        assertEquals(
-                range(4, 5),
-                new _<Integer>(range(5)).last().value()
-        );
+        assertEquals(range(4, 5), new _<>(range(5)).last().value());
     }
 
     // ----- _.rest --------------------------------------------------------------------------------
 
     @Test
     public void staticRest() {
-        assertEquals(
-                range(3, 5),
-                _.rest(range(5), 2)
-        );
+        assertEquals(range(3, 5), _.rest(range(5), 2));
+    }
+
+    @Test
+    public void staticRestWithNullInput() {
+        assertEquals(Collections.emptyList(), _.rest(null, 2));
     }
 
     @Test
     public void staticRestDefaultN() {
-        assertEquals(
-                range(2, 5),
-                _.rest(range(5))
-        );
+        assertEquals(range(2, 5), _.rest(range(5)));
     }
 
     @Test
     public void chainedRest() {
-        assertEquals(
-                range(3, 5),
-                new _<Integer>(range(5)).rest(2).value()
-        );
+        assertEquals(range(3, 5), new _<>(range(5)).rest(2).value());
     }
 
     @Test
     public void chainedRestDefaultN() {
-        assertEquals(
-                range(2, 5),
-                new _<Integer>(range(5)).rest().value()
-        );
+        assertEquals(range(2, 5), new _<>(range(5)).rest().value());
     }
 
     // ----- _.extend ------------------------------------------------------------------------------
@@ -456,5 +465,17 @@ public class _Test {
             public Builder setB(Integer b) { store.b = b; return this; }
             public BuilderDatastore build() { return store; }
         }
+    }
+
+    // ----- _.list --------------------------------------------------------------------------------
+
+    @Test
+    public void list() {
+        assertTrue(_.list("foo", "bar", "baz") instanceof List);
+    }
+
+    @Test
+    public void listWithNullInput() {
+        assertEquals(Collections.emptyList(), _.list());
     }
 }
