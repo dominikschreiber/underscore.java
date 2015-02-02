@@ -8,14 +8,14 @@ package java.util.function;
  */
 public interface Function<T, R> {
     /**
-     * <p>the actual callback method for functional-style programming</p>
-     * @param input
-     * @return the result of the computation (or {@link Void} if you do not want to return anything)
+     * <p>Applies this function to the given argument</p>
+     * @param t the function argument
+     * @return the function result
      */
-    public R apply(T input);
+    public R apply(T t);
 
     // not implementable pre Java 8:
-    
+
     // public default <V> Function<T, V> andThen(Function<? super R, ? extends V> after);
     // public default <V> Function<T, V> compose(Function<? super V, ? extends T> before);
     // public static <T> Function<T, T> identity();
