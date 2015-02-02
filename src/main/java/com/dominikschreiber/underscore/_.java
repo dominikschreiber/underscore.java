@@ -197,7 +197,7 @@ public final class _ <T> {
      * }, 0);
      * // => 10
      * </pre>
-     * <p>to make it clear that this is a {@code foldl}, take this example:</p>
+     * <p>to make it clear that this is a {@code reduceLeft}, take this example:</p>
      * <pre>
      * _.reduce(Arrays.asList(new Integer[] {1, 2, 3, 4}), new BiFunction<Integer, Integer, Integer>() {
      *     public Integer apply(Integer a, Integer b) {
@@ -485,7 +485,7 @@ public final class _ <T> {
         return defaults;
     }
 
-    // ----- _.list ----------------------------------------------------------------------------
+    // ----- _.list --------------------------------------------------------------------------------
 
     /**
      * <p>Creates a list of the values passed as arguments. E.g.</p>
@@ -512,5 +512,42 @@ public final class _ <T> {
             iterable.add(value);
         }
         return iterable;
+    }
+
+    // ----- _.join --------------------------------------------------------------------------------
+
+    public static String join(Iterable<String> values, final String separator) {
+        if (values == null) return "";
+
+        StringBuilder joined = new StringBuilder();
+        boolean isFirst = true;
+
+        for (String value : values) {
+            if (isFirst) {
+                joined.append(value);
+                isFirst = false;
+            } else {
+                joined.append(separator).append(value);
+            }
+        }
+
+        return joined.toString();
+    }
+
+    public static String join(Iterable<String> values) {
+        return _.join(values, ",");
+    }
+
+    public String join(final String separator) {
+        return _.join(_.map(mValues, new Function<T, String>() {
+            @Override
+            public String apply(T t) {
+                return t.toString();
+            }
+        }), separator);
+    }
+
+    public String join() {
+        return join(",");
     }
 }
