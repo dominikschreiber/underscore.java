@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -13,13 +14,13 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class _Test {
-    private Fn<Integer, Integer> square = new Fn<Integer, Integer>() {
+    private Function<Integer, Integer> square = new Function<Integer, Integer>() {
         @Override
         public Integer apply(Integer input) {
             return input * input;
         }
     };
-    private Fn<Integer, Boolean> isEven = new Fn<Integer, Boolean>() {
+    private Function<Integer, Boolean> isEven = new Function<Integer, Boolean>() {
         @Override
         public Boolean apply(Integer input) {
             return input % 2 == 0;
@@ -56,7 +57,7 @@ public class _Test {
     public void staticEachWithStringBuilder() {
         final StringBuilder result = new StringBuilder();
 
-        _.each(range(6), new Fn<Integer, Void>() {
+        _.each(range(6), new Function<Integer, Void>() {
             @Override
             public Void apply(Integer input) {
                 result.append(Integer.toString(input, 10));
@@ -69,7 +70,7 @@ public class _Test {
 
     @Test
     public void staticEachNullInput() {
-        _.each(null, new Fn<Object, Void>() {
+        _.each(null, new Function<Object, Void>() {
             @Override
             public Void apply(Object input) {
                 return null;
@@ -82,7 +83,7 @@ public class _Test {
     public void chainedEachWithStringBuilder() {
         final StringBuilder result = new StringBuilder();
         new _<>(range(6))
-                .each(new Fn<Integer, Void>() {
+                .each(new Function<Integer, Void>() {
                     public Void apply(Integer input) {
                         result.append(Integer.toString(input, 10));
                         return null;

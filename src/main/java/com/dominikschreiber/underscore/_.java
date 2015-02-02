@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * <p>implements basic functional programming methods known from underscore.js</p>
@@ -67,15 +68,15 @@ public final class _ <T> {
      * @param function the function to call on every element of {@code values}
      * @param <In> type of the elements in {@code values}
      */
-    public static <In> void each(Iterable<In> values, Fn<In, Void> function) {
+    public static <In> void each(Iterable<In> values, Function<In, Void> function) {
         if (values == null) return;
 
         for (In value : values)
             function.apply(value);
     }
 
-    /** @see #each(Iterable, Fn) */
-    public _<T> each(Fn<T, Void> function) {
+    /** @see #each(Iterable, Function) */
+    public _<T> each(Function<T, Void> function) {
         _.each(mValues, function);
         return this;
     }
@@ -100,7 +101,7 @@ public final class _ <T> {
      * @return a List of values of type {@code <Out>}, where {@code function} is
      * applied to all elements of {@code values}
      */
-    public static <In, Out> List<Out> map(Iterable<In> values, Fn<In, Out> function) {
+    public static <In, Out> List<Out> map(Iterable<In> values, Function<In, Out> function) {
         if (values == null) return Collections.emptyList();
 
         List<Out> result = new ArrayList<Out>();
@@ -109,8 +110,8 @@ public final class _ <T> {
         return result;
     }
 
-    /** @see #map(Iterable, Fn) */
-    public <Out> _<Out> map(Fn<T, Out> function) {
+    /** @see #map(Iterable, Function) */
+    public <Out> _<Out> map(Function<T, Out> function) {
         return new _<Out>(_.map(mValues, function));
     }
 
@@ -132,7 +133,7 @@ public final class _ <T> {
      * @param <In> type of the {@code values}
      * @return a List of all {@code values} that match {@code predicate}
      */
-    public static <In> List<In> filter(Iterable<In> values, Fn<In, Boolean> predicate) {
+    public static <In> List<In> filter(Iterable<In> values, Function<In, Boolean> predicate) {
         if (values == null) return Collections.emptyList();
 
         List<In> result = new ArrayList<>();
@@ -142,8 +143,8 @@ public final class _ <T> {
         return result;
     }
 
-    /** @see #filter(Iterable, Fn) */
-    public _<T> filter(Fn<T, Boolean> predicate) {
+    /** @see #filter(Iterable, Function) */
+    public _<T> filter(Function<T, Boolean> predicate) {
         return new _<T>(_.filter(mValues, predicate));
     }
 
@@ -166,7 +167,7 @@ public final class _ <T> {
      * @param <In>
      * @return
      */
-    public static <In> In find(Iterable<In> values, Fn<In, Boolean> predicate) {
+    public static <In> In find(Iterable<In> values, Function<In, Boolean> predicate) {
         if (values == null) return null;
 
         for (In value : values)
@@ -175,8 +176,8 @@ public final class _ <T> {
         return null;
     }
 
-    /** @see #find(Iterable, Fn) */
-    public T find(Fn<T, Boolean> predicate) {
+    /** @see #find(Iterable, Function) */
+    public T find(Function<T, Boolean> predicate) {
         return _.find(mValues, predicate);
     }
 
