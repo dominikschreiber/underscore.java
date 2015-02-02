@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * <p>implements basic functional programming methods known from underscore.js</p>
@@ -135,18 +136,18 @@ public final class _ <T> {
      * @param <In> type of the {@code values}
      * @return a List of all {@code values} that match {@code predicate}
      */
-    public static <In> List<In> filter(Iterable<In> values, Function<In, Boolean> predicate) {
+    public static <In> List<In> filter(Iterable<In> values, Predicate<In> predicate) {
         if (values == null) return Collections.emptyList();
 
         List<In> result = new ArrayList<>();
         for (In value : values)
-            if (predicate.apply(value))
+            if (predicate.test(value))
                 result.add(value);
         return result;
     }
 
-    /** @see #filter(Iterable, Function) */
-    public _<T> filter(Function<T, Boolean> predicate) {
+    /** @see #filter(Iterable, Predicate) */
+    public _<T> filter(Predicate<T> predicate) {
         return new _<T>(_.filter(mValues, predicate));
     }
 
@@ -169,17 +170,17 @@ public final class _ <T> {
      * @param <In>
      * @return
      */
-    public static <In> In find(Iterable<In> values, Function<In, Boolean> predicate) {
+    public static <In> In find(Iterable<In> values, Predicate<In> predicate) {
         if (values == null) return null;
 
         for (In value : values)
-            if (predicate.apply(value))
+            if (predicate.test(value))
                 return value;
         return null;
     }
 
-    /** @see #find(Iterable, Function) */
-    public T find(Function<T, Boolean> predicate) {
+    /** @see #find(Iterable, Predicate) */
+    public T find(Predicate<T> predicate) {
         return _.find(mValues, predicate);
     }
 

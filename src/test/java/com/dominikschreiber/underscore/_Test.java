@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -22,9 +23,9 @@ public class _Test {
             return input * input;
         }
     };
-    private Function<Integer, Boolean> isEven = new Function<Integer, Boolean>() {
+    private Predicate<Integer> isEven = new Predicate<Integer>() {
         @Override
-        public Boolean apply(Integer input) {
+        public boolean test(Integer input) {
             return input % 2 == 0;
         }
     };
@@ -473,6 +474,7 @@ public class _Test {
     @Test
     public void list() {
         assertTrue(_.list("foo", "bar", "baz") instanceof List);
+        assertEquals(Arrays.asList(new String[] {"foo", "bar"}), _.list(new String[] {"foo", "bar"}));
     }
 
     @Test
