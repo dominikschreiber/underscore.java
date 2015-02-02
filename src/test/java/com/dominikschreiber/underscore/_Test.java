@@ -479,4 +479,47 @@ public class _Test {
     public void listWithNullInput() {
         assertEquals(Collections.emptyList(), _.list());
     }
+
+    // ----- _.join --------------------------------------------------------------------------------
+
+    @Test
+    public void staticJoin() {
+        assertEquals("foo::bar", _.join(_.list("foo", "bar"), "::"));
+    }
+
+    @Test
+    public void staticJoinDefaultSeparator() {
+        assertEquals("foo,bar", _.join(_.list("foo", "bar")));
+    }
+
+    @Test
+    public void staticJoinWithNullInput() {
+        assertEquals("", _.join(null, ","));
+    }
+
+    @Test
+    public void staticJoinDefaultSeparatorWithNullInput() {
+        // need to cast -- otherwise multiple methods match _.join(null)
+        assertEquals("", _.join((Iterable<String>) null));
+    }
+
+    @Test
+    public void chainedJoin() {
+        assertEquals("foo::bar", new _<>(_.list("foo", "bar")).join("::"));
+    }
+
+    @Test
+    public void chainedJoinDefaultSeparator() {
+        assertEquals("foo,bar", new _<>(_.list("foo", "bar")).join());
+    }
+
+    @Test
+    public void chainedJoinWithNullInput() {
+        assertEquals("", new _<>(null).join("::"));
+    }
+
+    @Test
+    public void chainedJoinDefaultSeparatorWithNullInput() {
+        assertEquals("", new _<>(null).join());
+    }
 }
