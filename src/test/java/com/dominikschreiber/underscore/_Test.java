@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
@@ -26,13 +27,13 @@ public class _Test {
             return input % 2 == 0;
         }
     };
-    private BinaryFn<Integer, Integer, Integer> sum = new BinaryFn<Integer, Integer, Integer>() {
+    private BiFunction<Integer, Integer, Integer> sum = new BiFunction<Integer, Integer, Integer>() {
         @Override
         public Integer apply(Integer current, Integer sum) {
             return current + sum;
         }
     };
-    private BinaryFn<String, String, Boolean> stringEquals = new BinaryFn<String, String, Boolean>() {
+    private BiFunction<String, String, Boolean> stringEquals = new BiFunction<String, String, Boolean>() {
         @Override
         public Boolean apply(String a, String b) {
             return a.equals(b);

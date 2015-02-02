@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -34,7 +35,7 @@ public final class _ <T> {
      *       }
      *   }, 0);
      * }</pre>
-     * <p>If the call doesn't end up with {@link #reduce(BinaryFn, Object)},
+     * <p>If the call doesn't end up with {@link #reduce(java.util.function.BiFunction, Object)},
      * you need to access the values using {@link #value()}:</p>
      * <pre>{@code
      * new _<Integer>(Arrays.asList(new Integer[] {1, 2, 3, 4, 5}))
@@ -212,7 +213,7 @@ public final class _ <T> {
      * @param <Out> the result type
      * @return a value of type {@code <Out>} obtained by reducing {@code values} using {@combine} to a single value
      */
-    public static <In, Out> Out reduce(Iterable<In> values, BinaryFn<In, Out, Out> combine, Out init) {
+    public static <In, Out> Out reduce(Iterable<In> values, BiFunction<In, Out, Out> combine, Out init) {
         if (values == null) return init;
 
         Out result = init;
@@ -223,8 +224,8 @@ public final class _ <T> {
         return result;
     }
 
-    /** @see #reduce(Iterable, BinaryFn, Object) */
-    public <Out> Out reduce(BinaryFn<T, Out, Out> combine, Out init) {
+    /** @see #reduce(Iterable, BiFunction, Object) */
+    public <Out> Out reduce(BiFunction<T, Out, Out> combine, Out init) {
         return _.reduce(mValues, combine, init);
     }
 
@@ -239,7 +240,7 @@ public final class _ <T> {
      * @return {@code true} if {@code needle} is found in {@code haystack}
      */
     public static <In> boolean contains(Iterable<In> haystack, In needle) {
-        return _.contains(haystack, needle, new BinaryFn<In, In, Boolean>() {
+        return _.contains(haystack, needle, new BiFunction<In, In, Boolean>() {
             @Override
             public Boolean apply(In a, In b) {
                 return a.equals(b);
@@ -273,7 +274,7 @@ public final class _ <T> {
      * @param <In> the type of values in haystack/needle
      * @return {@code true} if {@code needle} is found in {@code haystack}
      */
-    public static <In> boolean contains(Iterable<In> haystack, In needle, BinaryFn<In, In, Boolean> equals) {
+    public static <In> boolean contains(Iterable<In> haystack, In needle, BiFunction<In, In, Boolean> equals) {
         if (haystack == null) return false;
 
         for (In hay : haystack) {
@@ -284,8 +285,8 @@ public final class _ <T> {
         return false;
     }
 
-    /** @see #contains(Iterable, Object, BinaryFn) */
-    public boolean contains(T needle, BinaryFn<T, T, Boolean> equals) {
+    /** @see #contains(Iterable, Object, BiFunction) */
+    public boolean contains(T needle, BiFunction<T, T, Boolean> equals) {
         return _.contains(mValues, needle, equals);
     }
 
