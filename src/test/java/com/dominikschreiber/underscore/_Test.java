@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
@@ -58,11 +59,10 @@ public class _Test {
     public void staticEachWithStringBuilder() {
         final StringBuilder result = new StringBuilder();
 
-        _.each(range(6), new Function<Integer, Void>() {
+        _.each(range(6), new Consumer<Integer>() {
             @Override
-            public Void apply(Integer input) {
+            public void accept(Integer input) {
                 result.append(Integer.toString(input, 10));
-                return null;
             }
         });
 
@@ -71,10 +71,9 @@ public class _Test {
 
     @Test
     public void staticEachNullInput() {
-        _.each(null, new Function<Object, Void>() {
+        _.each(null, new Consumer<Object>() {
             @Override
-            public Void apply(Object input) {
-                return null;
+            public void accept(Object input) {
             }
         });
         // tests pass if no exception is thrown -- no need to Assert.pass()
@@ -84,10 +83,10 @@ public class _Test {
     public void chainedEachWithStringBuilder() {
         final StringBuilder result = new StringBuilder();
         new _<>(range(6))
-                .each(new Function<Integer, Void>() {
-                    public Void apply(Integer input) {
+                .each(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer input) {
                         result.append(Integer.toString(input, 10));
-                        return null;
                     }
                 });
         assertEquals("12345", result.toString());

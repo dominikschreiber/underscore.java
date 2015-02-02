@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -58,7 +59,7 @@ public final class _ <T> {
      * <p>calls {@code function} on each value in {@code values}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.each(Arrays.asList(new Integer[] {1, 2, 3, 4}), new Fn<Integer, Void>() {
+     * _.each(Arrays.asList(new Integer[] {1, 2, 3, 4}), new Consumer<Integer>() {
      *     public Void apply(Integer in) {
      *         System.out.print("." + in + " ");
      *     }
@@ -69,15 +70,15 @@ public final class _ <T> {
      * @param function the function to call on every element of {@code values}
      * @param <In> type of the elements in {@code values}
      */
-    public static <In> void each(Iterable<In> values, Function<In, Void> function) {
+    public static <In> void each(Iterable<In> values, Consumer<In> function) {
         if (values == null) return;
 
         for (In value : values)
-            function.apply(value);
+            function.accept(value);
     }
 
-    /** @see #each(Iterable, Function) */
-    public _<T> each(Function<T, Void> function) {
+    /** @see #each(Iterable, Consumer) */
+    public _<T> each(Consumer<T> function) {
         _.each(mValues, function);
         return this;
     }
@@ -88,7 +89,7 @@ public final class _ <T> {
      * <p>creates a {@link List} of the results of applying {@code function} to all {@code values}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.map(Arrays.asList(new Integer[] {1, 2, 3, 4}), new Fn<Integer, Integer>() {
+     * _.map(Arrays.asList(new Integer[] {1, 2, 3, 4}), new Function<Integer, Integer>() {
      *     public Integer apply(Integer x) {
      *         return x * x;
      *     }
@@ -122,7 +123,7 @@ public final class _ <T> {
      * <p>creates a {@link List} of all {@code values} that match {@code predicate}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.filter(Arrays.asList(new Integer[] {1, 2, 3, 4}), new Fn<Integer, Boolean>() {
+     * _.filter(Arrays.asList(new Integer[] {1, 2, 3, 4}), new Function<Integer, Boolean>() {
      *     public Boolean apply(Integer x) {
      *         return x % 2 == 0;
      *     }
@@ -156,7 +157,7 @@ public final class _ <T> {
      * Breaks once the first matching value is found (does not traverse the whole list then).</p>
      * <p>e.g.</p>
      * <pre>{@code
-     * _.find(Arrays.asList(new Integer[] {1,2,3,4,5}, new Fn<Integer, Boolean>() {
+     * _.find(Arrays.asList(new Integer[] {1,2,3,4,5}, new Function<Integer, Boolean>() {
      *     public Boolean apply(Integer x) {
      *         return x % 2 == 0;
      *     }
@@ -189,7 +190,7 @@ public final class _ <T> {
      * <p>(this is also known as {@code foldl}, {@code reducel}, {@code foldLeft} or {@code reduceLeft}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.reduce(Arrays.asList(new Integer[] {1, 2, 3, 4}), new BinaryFn<Integer, Integer, Integer>() {
+     * _.reduce(Arrays.asList(new Integer[] {1, 2, 3, 4}), new BiFunction<Integer, Integer, Integer>() {
      *     public Integer apply(Integer a, Integer b) {
      *         return a + b;
      *     }
@@ -198,7 +199,7 @@ public final class _ <T> {
      * </pre>
      * <p>to make it clear that this is a {@code foldl}, take this example:</p>
      * <pre>
-     * _.reduce(Arrays.asList(new Integer[] {1, 2, 3, 4}), new BinaryFn<Integer, Integer, Integer>() {
+     * _.reduce(Arrays.asList(new Integer[] {1, 2, 3, 4}), new BiFunction<Integer, Integer, Integer>() {
      *     public Integer apply(Integer a, Integer b) {
      *         return a - b;
      *     }
@@ -258,7 +259,7 @@ public final class _ <T> {
      * <p>uses {@code equals} to determine equality.</p>
      * <p>e.g.</p>
      * <pre>{@code
-     * _.contains(Arrays.asList(new String[] {"abcde", "fghij"}), "c", new BinaryFn<String, String, Boolean>() {
+     * _.contains(Arrays.asList(new String[] {"abcde", "fghij"}), "c", new BiFunction<String, String, Boolean>() {
      *     // tests if any value in the haystack contains the needle
      *     public Boolean apply(String hay, String needle) {
      *         return hay.contains(needle);
