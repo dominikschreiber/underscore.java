@@ -250,6 +250,30 @@ public class _Test {
         assertEquals(Collections.emptyList(), new _<Integer>(null).reject(isEven).value());
     }
 
+    // ----- _.every -------------------------------------------------------------------------------
+
+    @Test
+    public void staticEvery() {
+        assertTrue(_.every(_.list(2,4,6), isEven));
+        assertFalse(_.every(range(6), isEven));
+    }
+
+    @Test
+    public void staticEveryWithNullInput() {
+        assertFalse(_.every(null, isEven));
+    }
+
+    @Test
+    public void chainedEvery() {
+        assertTrue(new _<>(_.list(2,4,6)).every(isEven));
+        assertFalse(new _<>(range(6)).every(isEven));
+    }
+
+    @Test
+    public void chainedEveryWithNullInput() {
+        assertFalse(new _<Integer>(null).every(isEven));
+    }
+
     // ----- _.size --------------------------------------------------------------------------------
 
     @Test
