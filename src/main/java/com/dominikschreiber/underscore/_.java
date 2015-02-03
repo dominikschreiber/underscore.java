@@ -231,6 +231,41 @@ public final class _ <T> {
         return _.reduce(mValues, combine, init);
     }
 
+    // ----- _.reject ------------------------------------------------------------------------------
+
+    /**
+     * <p>Returns the {@code values} that <b>do not pass</b> the {@code predicate}.</p>
+     * <p>This is the opposite of {@link #filter(Iterable, java.util.function.Predicate)}. E.g.:</p>
+     * <pre>{@code
+     * _.reject(_.list(1,2,3,4,5), new Predicate<Integer>() {
+     *     public boolean test(Integer i) {
+     *         return i % 2 == 0;
+     *     }
+     * });
+     * // => [1,3,5]
+     * }</pre>
+     * @param values the values to be checked
+     * @param predicate the predicate that indicates which values should be rejected
+     * @param <In> the type of the values
+     * @return a list of values that do not match {@code predicate}
+     */
+    public static <In> List<In> reject(Iterable<In> values, Predicate<In> predicate) {
+        if (values == null) return Collections.emptyList();
+
+        List<In> reject = new ArrayList<>();
+
+        for (In value : values)
+            if (!predicate.test(value))
+                reject.add(value);
+
+        return reject;
+    }
+
+    /** @see #reject(Iterable, java.util.function.Predicate) */
+    public _<T> reject(Predicate<T> predicate) {
+        return new _<T>(_.reject(mValues, predicate));
+    }
+
     // ----- _.contains ----------------------------------------------------------------------------
 
     /**
