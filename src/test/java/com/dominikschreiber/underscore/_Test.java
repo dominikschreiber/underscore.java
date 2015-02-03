@@ -228,6 +228,28 @@ public class _Test {
         assertFalse(new _<>(_.list("foo", "bar")).contains("baz", stringEquals));
     }
 
+    // ----- _.reject ------------------------------------------------------------------------------
+
+    @Test
+    public void staticRejectWithIsEven() {
+        assertEquals(_.list(1,3,5), _.reject(range(6), isEven));
+    }
+
+    @Test
+    public void staticRejectWithIsEvenWithNullInput() {
+        assertEquals(Collections.emptyList(), _.reject(null, isEven));
+    }
+
+    @Test
+    public void chainedRejectWithIsEven() {
+        assertEquals(_.list(1,3,5), new _<>(range(6)).reject(isEven).value());
+    }
+
+    @Test
+    public void chainedRejectWithIsEvenWithNullInput() {
+        assertEquals(Collections.emptyList(), new _<Integer>(null).reject(isEven).value());
+    }
+
     // ----- _.size --------------------------------------------------------------------------------
 
     @Test
