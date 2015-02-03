@@ -270,24 +270,51 @@ public final class _ <T> {
 
     /**
      * <p>Returns {@code true} if all of the {@code values} pass {@code predicate}.</p>
+     * <p>Short-circuits if it finds a non-passing value.</p>
      * @param values the values to be tested against {@code predicate}
      * @param predicate the predicate all {@code values} must pass
      * @param <In> the type of the {@code values}
      * @return {@code true} if all {@code values} pass {@code predicate}, otherwise {@code false}.
-     * {@code false} if {@code values == null}.
+     * {@code true} if {@code values == null}.
      */
     public static <In> boolean every(Iterable<In> values, Predicate<In> predicate) {
-        if (values == null) return false;
+        if (values == null) return true;
 
         for (In value : values)
             if (!predicate.test(value))
                 return false;
+
         return true;
     }
 
     /** @see #every(Iterable, java.util.function.Predicate) */
     public boolean every(Predicate<T> predicate) {
         return _.every(mValues, predicate);
+    }
+
+    // ----- _.some --------------------------------------------------------------------------------
+
+    /**
+     * <p>Returns {@code true} if any of the {@code values} pass {@code predicate}.</p>
+     * <p>Short-circuits if it finds a passing value..</p>
+     * @param values the values to be tested against {@code predicate}
+     * @param predicate the predicate that must be passed by a value in {@code values}
+     * @param <In> the type of the {@code values}
+     * @return {@code true} if a value in {@code values} passes {@code predicate}, otherwise {@code false}.
+     * {@code false} if {@code values == null}.
+     */
+    public static <In> boolean some(Iterable<In> values, Predicate<In> predicate) {
+        if (values == null) return false;
+
+        for (In value : values)
+            if (predicate.test(value))
+                return true;
+
+        return false;
+    }
+
+    public boolean some(Predicate<T> predicate) {
+        return _.some(mValues, predicate);
     }
 
     // ----- _.contains ----------------------------------------------------------------------------
