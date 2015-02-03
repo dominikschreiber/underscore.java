@@ -266,6 +266,30 @@ public final class _ <T> {
         return new _<T>(_.reject(mValues, predicate));
     }
 
+    // ----- _.every -------------------------------------------------------------------------------
+
+    /**
+     * <p>Returns {@code true} if all of the {@code values} pass {@code predicate}.</p>
+     * @param values the values to be tested against {@code predicate}
+     * @param predicate the predicate all {@code values} must pass
+     * @param <In> the type of the {@code values}
+     * @return {@code true} if all {@code values} pass {@code predicate}, otherwise {@code false}.
+     * {@code false} if {@code values == null}.
+     */
+    public static <In> boolean every(Iterable<In> values, Predicate<In> predicate) {
+        if (values == null) return false;
+
+        for (In value : values)
+            if (!predicate.test(value))
+                return false;
+        return true;
+    }
+
+    /** @see #every(Iterable, java.util.function.Predicate) */
+    public boolean every(Predicate<T> predicate) {
+        return _.every(mValues, predicate);
+    }
+
     // ----- _.contains ----------------------------------------------------------------------------
 
     /**
