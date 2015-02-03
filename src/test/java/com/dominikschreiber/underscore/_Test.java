@@ -260,7 +260,7 @@ public class _Test {
 
     @Test
     public void staticEveryWithNullInput() {
-        assertFalse(_.every(null, isEven));
+        assertTrue(_.every(null, isEven));
     }
 
     @Test
@@ -271,7 +271,31 @@ public class _Test {
 
     @Test
     public void chainedEveryWithNullInput() {
-        assertFalse(new _<Integer>(null).every(isEven));
+        assertTrue(new _<Integer>(null).every(isEven));
+    }
+
+    // ----- _.some --------------------------------------------------------------------------------
+
+    @Test
+    public void staticSome() {
+        assertTrue(_.some(range(6), isEven));
+        assertFalse(_.some(_.list(1,3), isEven));
+    }
+
+    @Test
+    public void staticSomeWithNullInput() {
+        assertFalse(_.some(null, isEven));
+    }
+
+    @Test
+    public void chainedSome() {
+        assertTrue(new _<>(range(6)).some(isEven));
+        assertFalse(new _<>(_.list(1,3)).some(isEven));
+    }
+
+    @Test
+    public void chainedSomeWithNullInput() {
+        assertFalse(new _<Integer>(null).some(isEven));
     }
 
     // ----- _.size --------------------------------------------------------------------------------
