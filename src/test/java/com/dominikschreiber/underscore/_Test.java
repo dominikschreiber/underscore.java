@@ -1,13 +1,13 @@
 package com.dominikschreiber.underscore;
 
 import com.dominikschreiber.underscore.java.util.function.BiFunction;
+import com.dominikschreiber.underscore.java.util.function.BiPredicate;
 import com.dominikschreiber.underscore.java.util.function.Consumer;
 import com.dominikschreiber.underscore.java.util.function.Function;
 import com.dominikschreiber.underscore.java.util.function.Predicate;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -36,24 +36,12 @@ public class _Test {
             return current + sum;
         }
     };
-    private BiFunction<String, String, Boolean> stringEquals = new BiFunction<String, String, Boolean>() {
+    private BiPredicate<String, String> stringEquals = new BiPredicate<String, String>() {
         @Override
-        public Boolean apply(String a, String b) {
+        public boolean test(String a, String b) {
             return a.equals(b);
         }
     };
-
-    private List<Integer> range(int from, int to) {
-        List<Integer> result = new ArrayList<>(to - from + 1);
-        for (int i = from; i < to; i++) {
-            result.add(i);
-        }
-        return result;
-    }
-
-    private List<Integer> range(int to) {
-        return range(1, to);
-    }
 
     // ----- _.each --------------------------------------------------------------------------------
 
@@ -61,7 +49,7 @@ public class _Test {
     public void staticEachWithStringBuilder() {
         final StringBuilder result = new StringBuilder();
 
-        _.each(range(6), new Consumer<Integer>() {
+        _.each(_.range(1, 6), new Consumer<Integer>() {
             @Override
             public void accept(Integer input) {
                 result.append(Integer.toString(input, 10));
@@ -84,7 +72,7 @@ public class _Test {
     @Test
     public void chainedEachWithStringBuilder() {
         final StringBuilder result = new StringBuilder();
-        new _<>(range(6))
+        new _<>(_.range(1, 6))
                 .each(new Consumer<Integer>() {
                     @Override
                     public void accept(Integer input) {
@@ -98,7 +86,7 @@ public class _Test {
 
     @Test
     public void staticMapWithSquare() {
-        List<Integer> result = _.map(range(6), square);
+        List<Integer> result = _.map(_.range(1, 6), square);
 
         assertEquals(_.list(1, 4, 9, 16, 25), result);
     }
@@ -110,7 +98,7 @@ public class _Test {
 
     @Test
     public void chainedMapWithSquare() {
-        Iterable<Integer> result = new _<>(range(6))
+        Iterable<Integer> result = new _<>(_.range(1, 6))
                 .map(square)
                 .value();
 
@@ -121,7 +109,7 @@ public class _Test {
 
     @Test
     public void staticFilterWithIsEven() {
-        List<Integer> result = _.filter(range(6), isEven);
+        List<Integer> result = _.filter(_.range(1, 6), isEven);
 
         assertEquals(Arrays.asList(new Integer[] {2, 4}), result);
     }
@@ -133,7 +121,7 @@ public class _Test {
 
     @Test
     public void chainedFilterWithIsEven() {
-        Iterable<Integer> result = new _<>(range(6))
+        Iterable<Integer> result = new _<>(_.range(1, 6))
                 .filter(isEven)
                 .value();
 
@@ -146,7 +134,7 @@ public class _Test {
     public void staticFindWithIsEven() {
         assertEquals(
                 2,
-                (int) _.find(range(6), isEven)
+                (int) _.find(_.range(1, 6), isEven)
         );
     }
 
@@ -159,7 +147,7 @@ public class _Test {
     public void chainedFindWithIsEven() {
         assertEquals(
                 2,
-                (int) new _<>(range(6)).find(isEven)
+                (int) new _<>(_.range(1, 6)).find(isEven)
         );
     }
 
@@ -167,7 +155,7 @@ public class _Test {
 
     @Test
     public void staticReduceWithSum() {
-        Integer result = _.reduce(range(6), sum, 0);
+        Integer result = _.reduce(_.range(1, 6), sum, 0);
 
         assertTrue(1 + 2 + 3 + 4 + 5 == result);
     }
@@ -182,7 +170,7 @@ public class _Test {
 
     @Test
     public void chainedReduceWithSum() {
-        Integer result = new _<>(range(6))
+        Integer result = new _<>(_.range(1, 6))
                 .reduce(sum, 0);
 
         assertTrue(1 + 2 + 3 + 4 + 5 == result);
@@ -190,7 +178,7 @@ public class _Test {
 
     @Test
     public void chainedComplexWithSumOfEvenSquares() {
-        Integer sumOfEvenSquares = new _<>(range(11))
+        Integer sumOfEvenSquares = new _<>(_.range(1, 11))
                 .map(square)
                 .filter(isEven)
                 .reduce(sum, 0);
@@ -202,8 +190,8 @@ public class _Test {
 
     @Test
     public void staticContainsWithIntegers() {
-        assertTrue(_.contains(range(6), 4));
-        assertFalse(_.contains(range(4), 6));
+        assertTrue(_.contains(_.range(1, 6), 4));
+        assertFalse(_.contains(_.range(1, 4), 6));
     }
 
     @Test
@@ -213,8 +201,8 @@ public class _Test {
 
     @Test
     public void chainedContainsWithIntegers() {
-        assertTrue(new _<>(range(6)).contains(4));
-        assertFalse(new _<>(range(4)).contains(6));
+        assertTrue(new _<>(_.range(1, 6)).contains(4));
+        assertFalse(new _<>(_.range(1, 4)).contains(6));
     }
 
     @Test
@@ -233,7 +221,7 @@ public class _Test {
 
     @Test
     public void staticRejectWithIsEven() {
-        assertEquals(_.list(1,3,5), _.reject(range(6), isEven));
+        assertEquals(_.list(1,3,5), _.reject(_.range(1, 6), isEven));
     }
 
     @Test
@@ -243,7 +231,7 @@ public class _Test {
 
     @Test
     public void chainedRejectWithIsEven() {
-        assertEquals(_.list(1,3,5), new _<>(range(6)).reject(isEven).value());
+        assertEquals(_.list(1,3,5), new _<>(_.range(1, 6)).reject(isEven).value());
     }
 
     @Test
@@ -256,7 +244,7 @@ public class _Test {
     @Test
     public void staticEvery() {
         assertTrue(_.every(_.list(2,4,6), isEven));
-        assertFalse(_.every(range(6), isEven));
+        assertFalse(_.every(_.range(1, 6), isEven));
     }
 
     @Test
@@ -267,7 +255,7 @@ public class _Test {
     @Test
     public void chainedEvery() {
         assertTrue(new _<>(_.list(2,4,6)).every(isEven));
-        assertFalse(new _<>(range(6)).every(isEven));
+        assertFalse(new _<>(_.range(1, 6)).every(isEven));
     }
 
     @Test
@@ -279,7 +267,7 @@ public class _Test {
 
     @Test
     public void staticSome() {
-        assertTrue(_.some(range(6), isEven));
+        assertTrue(_.some(_.range(1, 6), isEven));
         assertFalse(_.some(_.list(1,3), isEven));
     }
 
@@ -290,7 +278,7 @@ public class _Test {
 
     @Test
     public void chainedSome() {
-        assertTrue(new _<>(range(6)).some(isEven));
+        assertTrue(new _<>(_.range(1, 6)).some(isEven));
         assertFalse(new _<>(_.list(1,3)).some(isEven));
     }
 
@@ -303,7 +291,7 @@ public class _Test {
 
     @Test
     public void staticSize() {
-        assertEquals(3, _.size(range(4)));
+        assertEquals(3, _.size(_.range(1, 4)));
     }
 
     @Test
@@ -313,14 +301,14 @@ public class _Test {
 
     @Test
     public void chainedSize() {
-        assertEquals(3, new _<>(range(4)).size());
+        assertEquals(3, new _<>(_.range(1, 4)).size());
     }
 
     // ----- _.first -------------------------------------------------------------------------------
 
     @Test
     public void staticFirst() {
-        assertEquals(range(4), _.first(range(5), 3));
+        assertEquals(_.range(1, 4), _.first(_.range(1, 5), 3));
     }
 
     @Test
@@ -330,19 +318,19 @@ public class _Test {
 
     @Test
     public void staticFirstDefaultN() {
-        assertEquals(range(2), _.first(range(5)));
+        assertEquals(_.range(1, 2), _.first(_.range(1, 5)));
     }
 
     @Test
     public void chainedFirst() {
-        assertEquals(range(4),new _<>(range(5)).first(3).value());
+        assertEquals(_.range(1, 4),new _<>(_.range(1, 5)).first(3).value());
     }
 
     @Test
     public void chainedFirstDefaultN() {
         assertEquals(
-                range(2),
-                new _<>(range(5)).first().value()
+                _.range(1, 2),
+                new _<>(_.range(1, 5)).first().value()
         );
     }
 
@@ -377,29 +365,29 @@ public class _Test {
 
     @Test
     public void staticLast() {
-        assertEquals(range(4, 6), _.last(range(6), 2));
+        assertEquals(_.range(4, 6), _.last(_.range(1, 6), 2));
     }
 
     @Test
     public void staticLastDefaultN() {
-        assertEquals(range(4, 5), _.last(range(5)));
+        assertEquals(_.range(4, 5), _.last(_.range(1, 5)));
     }
 
     @Test
     public void chainedLast() {
-        assertEquals(range(4, 6), new _<>(range(6)).last(2).value());
+        assertEquals(_.range(4, 6), new _<>(_.range(1, 6)).last(2).value());
     }
 
     @Test
     public void chainedLastDefaultN() {
-        assertEquals(range(4, 5), new _<>(range(5)).last().value());
+        assertEquals(_.range(4, 5), new _<>(_.range(1, 5)).last().value());
     }
 
     // ----- _.rest --------------------------------------------------------------------------------
 
     @Test
     public void staticRest() {
-        assertEquals(range(3, 5), _.rest(range(5), 2));
+        assertEquals(_.range(3, 5), _.rest(_.range(1, 5), 2));
     }
 
     @Test
@@ -409,17 +397,69 @@ public class _Test {
 
     @Test
     public void staticRestDefaultN() {
-        assertEquals(range(2, 5), _.rest(range(5)));
+        assertEquals(_.range(2, 5), _.rest(_.range(1, 5)));
     }
 
     @Test
     public void chainedRest() {
-        assertEquals(range(3, 5), new _<>(range(5)).rest(2).value());
+        assertEquals(_.range(3, 5), new _<>(_.range(1, 5)).rest(2).value());
     }
 
     @Test
     public void chainedRestDefaultN() {
-        assertEquals(range(2, 5), new _<>(range(5)).rest().value());
+        assertEquals(_.range(2, 5), new _<>(_.range(1, 5)).rest().value());
+    }
+
+    // ----- _.range -------------------------------------------------------------------------------
+
+    @Test
+    public void rangeOptimisticInputs() {
+        assertEquals(_.list(1,2,3,4,5), _.range(1, 6, 1));
+    }
+
+    @Test
+    public void rangeNegativeStep() {
+        assertEquals(_.list(0,-1,-2,-3,-4), _.range(0, -5, -1));
+    }
+
+    @Test
+    public void rangeOddStep() {
+        assertEquals(_.list(0, 2, 4), _.range(0, 5, 2));
+        assertEquals(_.list(0, -2, -4), _.range(0, -5, -2));
+    }
+
+    @Test
+    public void rangeSameStartStop() {
+        List<Integer> empty = Collections.emptyList();
+        assertEquals(empty, _.range(0, 0, 1));
+    }
+
+    @Test
+    public void rangeZeroStep() {
+        List<Integer> empty = Collections.emptyList();
+        assertEquals(empty, _.range(0, 100, 0));
+    }
+
+    @Test
+    public void rangeStartGreaterStopPositiveStep() {
+        List<Integer> empty = Collections.emptyList();
+        assertEquals(empty, _.range(5, 0, 1));
+    }
+
+    @Test
+    public void rangeDefaultStep() {
+        assertEquals(_.list(0,1,2,3,4), _.range(0, 5));
+    }
+
+    @Test
+    public void rangeDefaultStepStartGreaterStop() {
+        List<Integer> empty = Collections.emptyList();
+        assertEquals(empty, _.range(0, -5));
+    }
+
+    @Test
+    public void rangeDefaultStart() {
+        assertEquals(_.list(0,1,2,3,4), _.range(5));
     }
 
     // ----- _.extend ------------------------------------------------------------------------------
