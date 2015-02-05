@@ -1,14 +1,16 @@
 package com.dominikschreiber.underscore;
 
+import com.dominikschreiber.underscore.java.util.function.BiFunction;
+import com.dominikschreiber.underscore.java.util.function.BiPredicate;
+import com.dominikschreiber.underscore.java.util.function.Consumer;
+import com.dominikschreiber.underscore.java.util.function.Function;
+import com.dominikschreiber.underscore.java.util.function.Predicate;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import com.dominikschreiber.underscore.java.util.function.BiFunction;
-import com.dominikschreiber.underscore.java.util.function.Consumer;
-import com.dominikschreiber.underscore.java.util.function.Function;
-import com.dominikschreiber.underscore.java.util.function.Predicate;
 
 /**
  * <p>implements basic functional programming methods known from underscore.js</p>
@@ -124,8 +126,8 @@ public final class _ <T> {
      * <p>creates a {@link List} of all {@code values} that match {@code predicate}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.filter(_.list(1, 2, 3, 4), new Function<Integer, Boolean>() {
-     *     public Boolean apply(Integer x) {
+     * _.filter(_.list(1, 2, 3, 4), new Predicate<Integer>() {
+     *     public boolean test(Integer x) {
      *         return x % 2 == 0;
      *     }
      * });
@@ -158,8 +160,8 @@ public final class _ <T> {
      * Breaks once the first matching value is found (does not traverse the whole list then).</p>
      * <p>e.g.</p>
      * <pre>{@code
-     * _.find(Arrays.asList(new Integer[] {1,2,3,4,5}, new Function<Integer, Boolean>() {
-     *     public Boolean apply(Integer x) {
+     * _.find(_.list(1,2,3,4,5), new Predicate<Integer>() {
+     *     public boolean test(Integer x) {
      *         return x % 2 == 0;
      *     }
      * });
@@ -328,9 +330,9 @@ public final class _ <T> {
      * @return {@code true} if {@code needle} is found in {@code haystack}
      */
     public static <In> boolean contains(Iterable<In> haystack, In needle) {
-        return _.contains(haystack, needle, new BiFunction<In, In, Boolean>() {
+        return _.contains(haystack, needle, new BiPredicate<In, In>() {
             @Override
-            public Boolean apply(In a, In b) {
+            public boolean test(In a, In b) {
                 return a.equals(b);
             }
         });
@@ -346,9 +348,9 @@ public final class _ <T> {
      * <p>uses {@code equals} to determine equality.</p>
      * <p>e.g.</p>
      * <pre>{@code
-     * _.contains(_.list("abcde", "fghij"), "c", new BiFunction<String, String, Boolean>() {
+     * _.contains(_.list("abcde", "fghij"), "c", new BiPredicate<String, String>() {
      *     // tests if any value in the haystack contains the needle
-     *     public Boolean apply(String hay, String needle) {
+     *     public boolean test(String hay, String needle) {
      *         return hay.contains(needle);
      *     }
      * });
@@ -362,19 +364,19 @@ public final class _ <T> {
      * @param <In> the type of values in haystack/needle
      * @return {@code true} if {@code needle} is found in {@code haystack}
      */
-    public static <In> boolean contains(Iterable<In> haystack, In needle, BiFunction<In, In, Boolean> equals) {
+    public static <In> boolean contains(Iterable<In> haystack, In needle, BiPredicate<In, In> equals) {
         if (haystack == null) return false;
 
         for (In hay : haystack) {
-            if (equals.apply(hay, needle)) {
+            if (equals.test(hay, needle)) {
                 return true;
             }
         }
         return false;
     }
 
-    /** @see #contains(Iterable, Object, BiFunction) */
-    public boolean contains(T needle, BiFunction<T, T, Boolean> equals) {
+    /** @see #contains(Iterable, Object, BiPredicate) */
+    public boolean contains(T needle, BiPredicate<T, T> equals) {
         return _.contains(mValues, needle, equals);
     }
 
@@ -531,6 +533,43 @@ public final class _ <T> {
 
     public _<T> rest() {
         return rest(1);
+    }
+
+    // ----- _.range -------------------------------------------------------------------------------
+
+    private static BiPredicate<Integer, Integer> greater = new BiPredicate<Integer, Integer>() {
+        @Override
+        public boolean test(Integer a, Integer b) {
+            return a > b;
+        }
+    };
+    private static BiPredicate<Integer, Integer> smaller = new BiPredicate<Integer, Integer>() {
+        @Override
+        public boolean test(Integer a, Integer b) {
+            return a < b;
+        }
+    };
+
+    public static List<Integer> range(int start, int stop, int step) {
+        if (start == stop ||
+                step == 0 ||
+                start > stop && step > 0) return Collections.emptyList();
+
+        List<Integer> range = new ArrayList<>();
+        BiPredicate<Integer, Integer> compare = (start < stop) ? smaller : greater;
+
+        for (int i = start; compare.test(i, stop); i += step)
+            range.add(i);
+
+        return range;
+    }
+
+    public static List<Integer> range(int start, int stop) {
+        return _.range(start, stop, 1);
+    }
+
+    public static List<Integer> range(int stop) {
+        return _.range(0, stop);
     }
 
     // ===== ~Objects ==============================================================================
