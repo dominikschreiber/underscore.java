@@ -577,6 +577,14 @@ public final class _ <T> {
         return _.range(0, stop);
     }
 
+    // ===== ~Functions ============================================================================
+
+    // ----- _.wrap ------------------------------------------------------------------------------
+
+    public static <In, Out> Function<In, Out> wrap(Function<In, Out> function, Function<Function<In, Out>, Function<In, Out>> wrapper) {
+        return wrapper.apply(function);
+    }
+
     // ===== ~Objects ==============================================================================
 
     // ----- _.extend ------------------------------------------------------------------------------
@@ -615,6 +623,8 @@ public final class _ <T> {
         }
         return defaults;
     }
+
+    // ===== Utility ===============================================================================
 
     // ----- _.list --------------------------------------------------------------------------------
 
@@ -680,5 +690,16 @@ public final class _ <T> {
 
     public String join() {
         return join(",");
+    }
+
+    // ----- _.identity ----------------------------------------------------------------------------
+
+    public static <In> Function<In, In> identity(Class<In> clazz) {
+        return new Function<In, In>() {
+            @Override
+            public In apply(In in) {
+                return in;
+            }
+        };
     }
 }
