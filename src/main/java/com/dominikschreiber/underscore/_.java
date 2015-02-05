@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import com.dominikschreiber.underscore.java.util.function.BiFunction;
+import com.dominikschreiber.underscore.java.util.function.Consumer;
+import com.dominikschreiber.underscore.java.util.function.Function;
+import com.dominikschreiber.underscore.java.util.function.Predicate;
 
 /**
  * <p>implements basic functional programming methods known from underscore.js</p>
@@ -23,7 +23,7 @@ public final class _ <T> {
      * <p>wraps {@code values} to allow chained execution, e.g.</p>
      * <pre>{@code
      * // compute sum of squares
-     * new _<Integer>(Arrays.asList(new Integer[] {1, 2, 3, 4, 5}))
+     * new _<>(_.list(1, 2, 3, 4, 5))
      *   // square the input
      *   .map(new Fn<Integer, Integer>() {
      *       public Integer apply(Integer in) {
@@ -37,10 +37,10 @@ public final class _ <T> {
      *       }
      *   }, 0);
      * }</pre>
-     * <p>If the call doesn't end up with {@link #reduce(java.util.function.BiFunction, Object)},
+     * <p>If the call doesn't end up with {@link #reduce(com.dominikschreiber.underscore.java.util.function.BiFunction, Object)},
      * you need to access the values using {@link #value()}:</p>
      * <pre>{@code
-     * new _<Integer>(Arrays.asList(new Integer[] {1, 2, 3, 4, 5}))
+     * new _<>(_.list(1, 2, 3, 4, 5))
      *   [...]
      *   .value(); // => Iterable
      * }</pre>
@@ -60,7 +60,7 @@ public final class _ <T> {
      * <p>calls {@code function} on each value in {@code values}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.each(Arrays.asList(new Integer[] {1, 2, 3, 4}), new Consumer<Integer>() {
+     * _.each(_.list(1, 2, 3, 4), new Consumer<Integer>() {
      *     public Void apply(Integer in) {
      *         System.out.print("." + in + " ");
      *     }
@@ -90,7 +90,7 @@ public final class _ <T> {
      * <p>creates a {@link List} of the results of applying {@code function} to all {@code values}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.map(Arrays.asList(new Integer[] {1, 2, 3, 4}), new Function<Integer, Integer>() {
+     * _.map(_.list(1, 2, 3, 4), new Function<Integer, Integer>() {
      *     public Integer apply(Integer x) {
      *         return x * x;
      *     }
@@ -115,7 +115,7 @@ public final class _ <T> {
 
     /** @see #map(Iterable, Function) */
     public <Out> _<Out> map(Function<T, Out> function) {
-        return new _<Out>(_.map(mValues, function));
+        return new _<>(_.map(mValues, function));
     }
 
     // ----- _.filter ------------------------------------------------------------------------------
@@ -124,7 +124,7 @@ public final class _ <T> {
      * <p>creates a {@link List} of all {@code values} that match {@code predicate}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.filter(Arrays.asList(new Integer[] {1, 2, 3, 4}), new Function<Integer, Boolean>() {
+     * _.filter(_.list(1, 2, 3, 4), new Function<Integer, Boolean>() {
      *     public Boolean apply(Integer x) {
      *         return x % 2 == 0;
      *     }
@@ -148,7 +148,7 @@ public final class _ <T> {
 
     /** @see #filter(Iterable, Predicate) */
     public _<T> filter(Predicate<T> predicate) {
-        return new _<T>(_.filter(mValues, predicate));
+        return new _<>(_.filter(mValues, predicate));
     }
 
     // ----- _.find --------------------------------------------------------------------------------
@@ -191,7 +191,7 @@ public final class _ <T> {
      * <p>(this is also known as {@code foldl}, {@code reducel}, {@code foldLeft} or {@code reduceLeft}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.reduce(Arrays.asList(new Integer[] {1, 2, 3, 4}), new BiFunction<Integer, Integer, Integer>() {
+     * _.reduce(_.list(1, 2, 3, 4), new BiFunction<Integer, Integer, Integer>() {
      *     public Integer apply(Integer a, Integer b) {
      *         return a + b;
      *     }
@@ -200,7 +200,7 @@ public final class _ <T> {
      * </pre>
      * <p>to make it clear that this is a {@code reduceLeft}, take this example:</p>
      * <pre>
-     * _.reduce(Arrays.asList(new Integer[] {1, 2, 3, 4}), new BiFunction<Integer, Integer, Integer>() {
+     * _.reduce(_.list(1, 2, 3, 4), new BiFunction<Integer, Integer, Integer>() {
      *     public Integer apply(Integer a, Integer b) {
      *         return a - b;
      *     }
@@ -235,7 +235,7 @@ public final class _ <T> {
 
     /**
      * <p>Returns the {@code values} that <b>do not pass</b> the {@code predicate}.</p>
-     * <p>This is the opposite of {@link #filter(Iterable, java.util.function.Predicate)}. E.g.:</p>
+     * <p>This is the opposite of {@link #filter(Iterable, com.dominikschreiber.underscore.java.util.function.Predicate)}. E.g.:</p>
      * <pre>{@code
      * _.reject(_.list(1,2,3,4,5), new Predicate<Integer>() {
      *     public boolean test(Integer i) {
@@ -261,9 +261,9 @@ public final class _ <T> {
         return reject;
     }
 
-    /** @see #reject(Iterable, java.util.function.Predicate) */
+    /** @see #reject(Iterable, com.dominikschreiber.underscore.java.util.function.Predicate) */
     public _<T> reject(Predicate<T> predicate) {
-        return new _<T>(_.reject(mValues, predicate));
+        return new _<>(_.reject(mValues, predicate));
     }
 
     // ----- _.every -------------------------------------------------------------------------------
@@ -287,7 +287,7 @@ public final class _ <T> {
         return true;
     }
 
-    /** @see #every(Iterable, java.util.function.Predicate) */
+    /** @see #every(Iterable, com.dominikschreiber.underscore.java.util.function.Predicate) */
     public boolean every(Predicate<T> predicate) {
         return _.every(mValues, predicate);
     }
@@ -346,7 +346,7 @@ public final class _ <T> {
      * <p>uses {@code equals} to determine equality.</p>
      * <p>e.g.</p>
      * <pre>{@code
-     * _.contains(Arrays.asList(new String[] {"abcde", "fghij"}), "c", new BiFunction<String, String, Boolean>() {
+     * _.contains(_.list("abcde", "fghij"), "c", new BiFunction<String, String, Boolean>() {
      *     // tests if any value in the haystack contains the needle
      *     public Boolean apply(String hay, String needle) {
      *         return hay.contains(needle);
@@ -406,7 +406,7 @@ public final class _ <T> {
      * <p>returns the first {@code n} elements of {@code values}</p>
      * <p>e.g.</p>
      * <pre>{@code
-     * _.first(Arrays.asList(new Integer[] {1, 2, 3, 4, 5}), 2);
+     * _.first(_.list(1, 2, 3, 4, 5), 2);
      * // => [1, 2]
      * }</pre>
      * @param values
@@ -434,7 +434,7 @@ public final class _ <T> {
 
     /** @see #first(Iterable, int)  */
     public _<T> first(int n) {
-        return new _<T>(_.first(mValues, n));
+        return new _<>(_.first(mValues, n));
     }
 
     /** @see #first(int) */
@@ -463,7 +463,7 @@ public final class _ <T> {
     }
 
     public _<T> initial(int n) {
-        return new _<T>(_.initial(mValues, n));
+        return new _<>(_.initial(mValues, n));
     }
 
     public _<T> initial() {
@@ -476,7 +476,7 @@ public final class _ <T> {
      * <p>returns the last {@code n} elements of {@code values}</p>
      * <p>e.g.</p>
      * <pre>{@code
-     * _.last(Arrays.asList(new String[] {"foo", "bar", "baz"}), 2);
+     * _.last(_.list("foo", "bar", "baz"), 2);
      * // => ["bar", "baz"]
      * }</pre>
      * @param values the values to take the last {@code n} from
@@ -507,7 +507,7 @@ public final class _ <T> {
 
     /** @see #last(Iterable, int) */
     public _<T> last(int n) {
-        return new _<T>(_.last(mValues, n));
+        return new _<>(_.last(mValues, n));
     }
 
     /** @see #last(int) */
@@ -526,7 +526,7 @@ public final class _ <T> {
     }
 
     public _<T> rest(int startindex) {
-        return new _<T>(_.rest(mValues, startindex));
+        return new _<>(_.rest(mValues, startindex));
     }
 
     public _<T> rest() {

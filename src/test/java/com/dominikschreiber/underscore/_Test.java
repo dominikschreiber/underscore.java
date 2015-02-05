@@ -1,15 +1,16 @@
 package com.dominikschreiber.underscore;
 
+import com.dominikschreiber.underscore.java.util.function.BiFunction;
+import com.dominikschreiber.underscore.java.util.function.Consumer;
+import com.dominikschreiber.underscore.java.util.function.Function;
+import com.dominikschreiber.underscore.java.util.function.Predicate;
+
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -43,7 +44,7 @@ public class _Test {
     };
 
     private List<Integer> range(int from, int to) {
-        List<Integer> result = new ArrayList<Integer>(to - from + 1);
+        List<Integer> result = new ArrayList<>(to - from + 1);
         for (int i = from; i < to; i++) {
             result.add(i);
         }
