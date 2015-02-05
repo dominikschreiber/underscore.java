@@ -24,27 +24,32 @@ public final class _ <T> {
     /**
      * <p>wraps {@code values} to allow chained execution, e.g.</p>
      * <pre>{@code
-     * // compute sum of squares
+     * // compute sum of even squares
      * new _<>(_.list(1, 2, 3, 4, 5))
      *   // square the input
-     *   .map(new Fn<Integer, Integer>() {
+     *   .map(new Function<Integer, Integer>() {
      *       public Integer apply(Integer in) {
      *           return in * in;
      *       }
      *   })
+     *   // pick only even squares
+     *   .filter(new Predicate<Integer>() {
+     *       public boolean test(Integer in) {
+     *           return in % 2 == 0;
+     *       }
+     *   })
      *   // sum the squares
-     *   .reduce(new BinaryFn<Integer, Integer, Integer>() {
-     *       public Integer apply(Integer now, Integer prev) {
-     *           return now + prev;
+     *   .reduce(new BiFunction<Integer, Integer, Integer>() {
+     *       public Integer apply(Integer now, Integer accumulator) {
+     *           return now + accumulator;
      *       }
      *   }, 0);
      * }</pre>
-     * <p>If the call doesn't end up with {@link #reduce(com.dominikschreiber.underscore.java.util.function.BiFunction, Object)},
-     * you need to access the values using {@link #value()}:</p>
+     * <p>To get the the actual value of the computation, use {@link #value()}:</p>
      * <pre>{@code
      * new _<>(_.list(1, 2, 3, 4, 5))
      *   [...]
-     *   .value(); // => Iterable
+     *   .value(); // => Iterable<>
      * }</pre>
      * @param values the values that should be wrapped
      */
@@ -194,8 +199,8 @@ public final class _ <T> {
      * <p>i.e.</p>
      * <pre>
      * _.reduce(_.list(1, 2, 3, 4), new BiFunction<Integer, Integer, Integer>() {
-     *     public Integer apply(Integer a, Integer b) {
-     *         return a + b;
+     *     public Integer apply(Integer now, Integer accumulator) {
+     *         return now + accumulator;
      *     }
      * }, 0);
      * // => 10
@@ -203,8 +208,8 @@ public final class _ <T> {
      * <p>to make it clear that this is a {@code reduceLeft}, take this example:</p>
      * <pre>
      * _.reduce(_.list(1, 2, 3, 4), new BiFunction<Integer, Integer, Integer>() {
-     *     public Integer apply(Integer a, Integer b) {
-     *         return a - b;
+     *     public Integer apply(Integer now, Integer accumulator) {
+     *         return now - accumulator;
      *     }
      * }, 0);
      * // => -10 (as (0 - (1 - (2 - (3 - (4))))))
