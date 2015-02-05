@@ -462,6 +462,36 @@ public class _Test {
         assertEquals(_.list(0,1,2,3,4), _.range(5));
     }
 
+    // ----- _.wrap --------------------------------------------------------------------------------
+
+    @Test
+    public void wrap() {
+        final String before = "before ++ ";
+        final String after = " ++ after";
+        final Function<String, String> expected = new Function<String, String>() {
+            @Override
+            public String apply(String s) {
+                return before + s + after;
+            }
+        };
+        final Function<String, String> actual = _.wrap(_.identity(String.class), new Function<Function<String, String>, Function<String, String>>() {
+            public Function<String, String> apply(final Function<String, String> wrapped) {
+                return new Function<String, String>() {
+                    public String apply(String s){
+                        return before + wrapped.apply(s) + after;
+                    }
+                };
+            }
+        });
+
+        _.each(_.list("foo", "bar", "baz"), new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                assertEquals(expected.apply(s), actual.apply(s));
+            }
+        });
+    }
+
     // ----- _.extend ------------------------------------------------------------------------------
 
     @Test
@@ -634,5 +664,24 @@ public class _Test {
     @Test
     public void chainedJoinDefaultSeparatorWithNullInput() {
         assertEquals("", new _<>(null).join());
+    }
+
+    // ----- _.identity ----------------------------------------------------------------------------
+
+    @Test
+    public void identity() {
+        final Function<String, String> expected = new Function<String, String>() {
+            public String apply(String s) {
+                return s;
+            }
+        };
+        final Function<String, String> actual = _.identity(String.class);
+
+        _.each(_.list("foo", "bar", "baz"), new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                assertEquals(expected.apply(s), actual.apply(s));
+            }
+        });
     }
 }
