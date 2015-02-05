@@ -1,4 +1,4 @@
-package java.util.function;
+package com.dominikschreiber.underscore.java.util.function;
 
 /**
  * <p>Represents a function that accepts one argument and produces a result.</p>

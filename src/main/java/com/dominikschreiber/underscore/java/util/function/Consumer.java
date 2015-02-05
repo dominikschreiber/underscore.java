@@ -1,4 +1,4 @@
-package java.util.function;
+package com.dominikschreiber.underscore.java.util.function;
 
 /**
  * <p>Represents an operation that accepts a single input argument and returns no result.
