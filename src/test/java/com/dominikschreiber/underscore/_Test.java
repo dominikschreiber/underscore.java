@@ -726,4 +726,11 @@ public class _Test {
             }
         });
     }
+
+    // ----- _.constant ----------------------------------------------------------------------------
+
+    @Test
+    public void constant() {
+        assertEquals("foo", _.constant("foo").get());
+    }
 }
