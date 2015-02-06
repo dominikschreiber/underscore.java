@@ -534,6 +534,25 @@ public class _Test {
         });
     }
 
+    // ----- _.negate ------------------------------------------------------------------------------
+
+    @Test
+    public void negate() {
+        final Predicate<String> ofEvenLength = new Predicate<String>() {
+            @Override
+            public boolean test(String s) {
+                return s.length() % 2 == 0;
+            }
+        };
+        final Predicate<String> ofOddLength = _.negate(ofEvenLength);
+        _.each(_.list("foo", "lorem", "quux"), new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                assertTrue(ofEvenLength.test(s) ^ ofOddLength.test(s));
+            }
+        });
+    }
+
     // ----- _.extend ------------------------------------------------------------------------------
 
     @Test
