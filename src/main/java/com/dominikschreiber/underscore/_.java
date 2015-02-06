@@ -622,6 +622,15 @@ public final class _ <T> {
         };
     }
 
+    public static <U, V> BiPredicate<U, V> negate(final BiPredicate<U, V> predicate) {
+        return new BiPredicate<U, V>() {
+            @Override
+            public boolean test(U u, V v) {
+                return !predicate.test(u,v);
+            }
+        };
+    }
+
     // ===== ~Objects ==============================================================================
 
     // ----- _.extend ------------------------------------------------------------------------------
