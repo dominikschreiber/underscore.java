@@ -605,10 +605,21 @@ public final class _ <T> {
 
     // ===== ~Functions ============================================================================
 
-    // ----- _.wrap ------------------------------------------------------------------------------
+    // ----- _.wrap --------------------------------------------------------------------------------
 
     public static <In, Out> Function<In, Out> wrap(Function<In, Out> function, Function<Function<In, Out>, Function<In, Out>> wrapper) {
         return wrapper.apply(function);
+    }
+
+    // ----- _.negate ------------------------------------------------------------------------------
+
+    public static <In> Predicate<In> negate(final Predicate<In> predicate) {
+        return new Predicate<In>() {
+            @Override
+            public boolean test(In in) {
+                return !predicate.test(in);
+            }
+        };
     }
 
     // ===== ~Objects ==============================================================================
