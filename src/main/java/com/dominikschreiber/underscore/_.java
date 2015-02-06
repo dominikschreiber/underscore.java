@@ -5,6 +5,7 @@ import com.dominikschreiber.underscore.java.util.function.BiPredicate;
 import com.dominikschreiber.underscore.java.util.function.Consumer;
 import com.dominikschreiber.underscore.java.util.function.Function;
 import com.dominikschreiber.underscore.java.util.function.Predicate;
+import com.dominikschreiber.underscore.java.util.function.Supplier;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -719,11 +720,41 @@ public final class _ <T> {
 
     // ----- _.identity ----------------------------------------------------------------------------
 
+    /**
+     * <p>returns the identity function for {@code In} values. E.g.</p>
+     * <pre>{@code
+     * _.identity(String.class).apply("foo") // => "foo"
+     * }</pre>
+     * @param clazz
+     * @param <In>
+     * @return
+     */
     public static <In> Function<In, In> identity(Class<In> clazz) {
         return new Function<In, In>() {
             @Override
             public In apply(In in) {
                 return in;
+            }
+        };
+    }
+
+    // ----- _.constant ----------------------------------------------------------------------------
+
+    /**
+     * <p>returns a function that always returns {@code value}. E.g.:</p>
+     * <pre>{@code
+     * Supplier<Integer> five = _.constant(5);
+     * five.get() // => 5
+     * }</pre>
+     * @param value the value the constant function should return
+     * @param <In> the type of the value returned by the function
+     * @return a {@link Supplier} that returns {@code value}
+     */
+    public static <In> Supplier<In> constant(final In value) {
+        return new Supplier<In>() {
+            @Override
+            public In get() {
+                return value;
             }
         };
     }
