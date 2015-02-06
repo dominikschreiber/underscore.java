@@ -10,7 +10,9 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -215,6 +217,46 @@ public class _Test {
     public void chainedContainsWithStringEquals() {
         assertTrue(new _<>(_.list("foo", "bar", "baz")).contains("foo", stringEquals));
         assertFalse(new _<>(_.list("foo", "bar")).contains("baz", stringEquals));
+    }
+
+    // ----- _.groupBy -----------------------------------------------------------------------------
+
+    @Test
+    public void staticGroupBy() {
+        Map<Integer, List<String>> expected = new HashMap<>();
+        expected.put(3, _.list("foo", "bar", "baz"));
+        expected.put(4, _.list("this", "shit"));
+
+        assertEquals(expected, _.groupBy(_.list("foo", "bar", "baz", "this", "shit"), new Function<String, Integer>() {
+            public Integer apply(String s) {
+                return s.length();
+            }
+        }));
+    }
+
+    @Test
+    public void staticGroupByNullInput() {
+        assertEquals(Collections.emptyMap(), _.groupBy(null, _.identity(Integer.class)));
+    }
+
+    @Test
+    public void chainedGroupBy() {
+        Map<Integer, List<String>> expected = new HashMap<>();
+        expected.put(3, _.list("foo", "bar", "baz"));
+        expected.put(4, _.list("this", "shit"));
+
+        assertEquals(expected, new _<>(_.list("foo", "bar", "baz", "this", "shit"))
+                .groupBy(new Function<String, Integer>() {
+                    public Integer apply(String s) {
+                        return s.length();
+                    }
+                })
+        );
+    }
+
+    @Test
+    public void chainedGroupNullInput() {
+        assertEquals(Collections.emptyMap(), new _<Integer>(null).groupBy(_.identity(Integer.class)));
     }
 
     // ----- _.reject ------------------------------------------------------------------------------
