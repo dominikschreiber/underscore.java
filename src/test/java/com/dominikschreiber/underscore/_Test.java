@@ -452,6 +452,52 @@ public class _Test {
         assertEquals(_.range(2, 5), new _<>(_.range(1, 5)).rest().value());
     }
 
+    // ----- _.zip ---------------------------------------------------------------------------------
+
+    @Test
+    public void staticZipSameLengths() {
+        assertEquals(_.list(_.list(0,3), _.list(1,4), _.list(2,5)), _.zip(_.range(3), _.range(3,6)));
+    }
+
+    @Test
+    public void staticZipFirstIsLonger() {
+        assertEquals(_.list(_.list(0,3), _.list(1,4)), _.zip(_.range(3), _.range(3,5)));
+    }
+
+    @Test
+    public void staticZipSecondIsLonger() {
+        assertEquals(_.list(_.list(0,3), _.list(1,4), _.list(2,5)), _.zip(_.range(3), _.range(3,9)));
+    }
+
+    @Test
+    public void staticZipNullInput() {
+        assertEquals(Collections.emptyList(), _.zip(null, _.range(4)));
+        assertEquals(Collections.emptyList(), _.zip(_.range(4), null));
+    }
+
+    @Test
+    public void chainedZipSameLengths() {
+        assertEquals(_.list(_.list(0,4), _.list(1,5), _.list(2,6), _.list(3,7)),
+                new _<>(_.range(4)).zip(_.range(4,8)).value());
+    }
+
+    @Test
+    public void chainedZipFirstIsLonger() {
+        assertEquals(_.list(_.list(0,3), _.list(1,4)),
+                new _<>(_.range(4)).zip(_.range(3,5)).value());
+    }
+
+    @Test
+    public void chainedZipSecondIsLonger() {
+        assertEquals(_.list(_.list(0,3), _.list(1,4)),
+                new _<>(_.range(2)).zip(_.range(3,9)).value());
+    }
+
+    @Test
+    public void chainedZipNullInput() {
+        assertEquals(Collections.emptyList(), new _<>(_.range(10)).zip(null).value());
+    }
+
     // ----- _.range -------------------------------------------------------------------------------
 
     @Test
