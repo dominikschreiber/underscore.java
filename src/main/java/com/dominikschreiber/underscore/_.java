@@ -9,8 +9,10 @@ import com.dominikschreiber.underscore.java.util.function.Predicate;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>implements basic functional programming methods known from underscore.js</p>
@@ -383,6 +385,29 @@ public final class _ <T> {
     /** @see #contains(Iterable, Object, BiPredicate) */
     public boolean contains(T needle, BiPredicate<T, T> equals) {
         return _.contains(mValues, needle, equals);
+    }
+
+    // ----- _.groupBy -----------------------------------------------------------------------------
+
+    public static <In, Key> Map<Key, List<In>> groupBy(Iterable<In> values, Function<In, Key> group) {
+        if (values == null) return Collections.emptyMap();
+
+        Map<Key, List<In>> result = new HashMap<>();
+
+        for (In value : values) {
+            Key key = group.apply(value);
+            if (result.containsKey(key)) {
+                result.get(key).add(value);
+            } else {
+                result.put(key, _.list(value));
+            }
+        }
+
+        return result;
+    }
+
+    public <Key> Map<Key, List<T>> groupBy(Function<T, Key> group) {
+        return _.groupBy(mValues, group);
     }
 
     // ----- _.size --------------------------------------------------------------------------------
