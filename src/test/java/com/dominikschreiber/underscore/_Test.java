@@ -537,7 +537,7 @@ public class _Test {
     // ----- _.negate ------------------------------------------------------------------------------
 
     @Test
-    public void negate() {
+    public void negatePredicate() {
         final Predicate<String> ofEvenLength = new Predicate<String>() {
             @Override
             public boolean test(String s) {
@@ -549,6 +549,24 @@ public class _Test {
             @Override
             public void accept(String s) {
                 assertTrue(ofEvenLength.test(s) ^ ofOddLength.test(s));
+            }
+        });
+    }
+
+    @Test
+    public void negateBiPredicate() {
+        final BiPredicate<String, Integer> isOfLength = new BiPredicate<String, Integer>() {
+            @Override
+            public boolean test(String s, Integer integer) {
+                return s.length() == integer;
+            }
+        };
+        final BiPredicate<String, Integer> isNotOfLength = _.negate(isOfLength);
+        _.each(_.list("foo:3", "lorem:2", "quux:12"), new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                String[] unzip = s.split(":");
+                assertTrue(isOfLength.test(unzip[0], Integer.parseInt(unzip[1])) ^ isNotOfLength.test(unzip[0], Integer.parseInt(unzip[1])));
             }
         });
     }
