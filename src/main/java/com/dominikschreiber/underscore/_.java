@@ -306,7 +306,7 @@ public final class _ <T> {
 
     /**
      * <p>Returns {@code true} if any of the {@code values} pass {@code predicate}.</p>
-     * <p>Short-circuits if it finds a passing value..</p>
+     * <p>Short-circuits if it finds a passing value.</p>
      * @param values the values to be tested against {@code predicate}
      * @param predicate the predicate that must be passed by a value in {@code values}
      * @param <In> the type of the {@code values}
@@ -323,6 +323,7 @@ public final class _ <T> {
         return false;
     }
 
+    /** @see #some(Iterable, Predicate) */
     public boolean some(Predicate<T> predicate) {
         return _.some(mValues, predicate);
     }
@@ -566,6 +567,40 @@ public final class _ <T> {
         return rest(1);
     }
 
+    // ----- _.zip ---------------------------------------------------------------------------------
+
+    /**
+     * <p>returns a merged list of the lists {@code first} and {@code second}. E.g.</p>
+     * <pre>{@code
+     * _.zip(_.list(1,2,3), _.list(4,5,6)) // => [[1,4], [2,5], [3,6]]
+     * }</pre>
+     * <p>if the lists have different lengths, the merged list will be as long as the shorter list. I.e.</p>
+     * <pre>{@code
+     * _.zip(_.list(1,2,3), _.list(4,5,6,7,8,9)) // => [[1,4], [2,5], [3,6]]
+     * }</pre>
+     * @param first the first list of values
+     * @param second the second list of values
+     * @param <In> the type of values in {@code first} and {@code second}
+     * @return the merged list
+     */
+    public static <In> List<List<In>> zip(Iterable<In> first, Iterable<In> second) {
+        if (first == null || second == null) return Collections.emptyList();
+
+        List<List<In>> zipped = new ArrayList<>();
+        Iterator<In> f, s;
+
+        for (f = first.iterator(), s = second.iterator(); f.hasNext() && s.hasNext();/* nothing */) {
+            zipped.add(_.list(f.next(), s.next()));
+        }
+
+        return zipped;
+    }
+
+    /** @see #zip(Iterable, Iterable) */
+    public _<List<T>> zip(Iterable<T> other) {
+        return new _<>(_.zip(mValues, other));
+    }
+
     // ----- _.range -------------------------------------------------------------------------------
 
     private static BiPredicate<Integer, Integer> greater = new BiPredicate<Integer, Integer>() {
@@ -581,6 +616,24 @@ public final class _ <T> {
         }
     };
 
+    /**
+     * <p>returns a list of integers starting at {@code start}, ending at {@code stop},
+     * incrementing by {@code step}. E.g.</p>
+     * <pre>{@code
+     * _.range(5) // => [0, 1, 2, 3, 4]
+     * _.range(3, 9) // => [3, 4, 5, 6, 7, 8]
+     * _.range(5, 16, 2) // => [5, 7, 9, 11, 13, 15]
+     * _.range(0, -4, -1) // => [0, -1, -2, -3]
+     * }</pre>
+     * <p>Negative ranges without negative step are considered empty:</p>
+     * <pre>{@code
+     * _.range(3, 2, 1) // => []
+     * }</pre>
+     * @param start the start index, included (defaults to {@code 0})
+     * @param stop the end index, excluded
+     * @param step the stepwidth (defaults to {@code 1})
+     * @return a list of integers in the specified range
+     */
     public static List<Integer> range(int start, int stop, int step) {
         if (start == stop ||
                 step == 0 ||
@@ -595,10 +648,12 @@ public final class _ <T> {
         return range;
     }
 
+    /** @see #range(int, int, int) */
     public static List<Integer> range(int start, int stop) {
         return _.range(start, stop, 1);
     }
 
+    /** @see #range(int, int, int) */
     public static List<Integer> range(int stop) {
         return _.range(0, stop);
     }
@@ -613,6 +668,12 @@ public final class _ <T> {
 
     // ----- _.negate ------------------------------------------------------------------------------
 
+    /**
+     * <p>returns the negated version of {@code predicate}. I.e.</p>
+     * <pre>forall x of In: predicate(x) XOR _.negate(predicate)(x)</pre>
+     * @param predicate the predicate to be negated
+     * @return the negated predicate
+     */
     public static <In> Predicate<In> negate(final Predicate<In> predicate) {
         return new Predicate<In>() {
             @Override
@@ -622,6 +683,7 @@ public final class _ <T> {
         };
     }
 
+    /** @see #negate(Predicate) */
     public static <U, V> BiPredicate<U, V> negate(final BiPredicate<U, V> predicate) {
         return new BiPredicate<U, V>() {
             @Override
@@ -662,11 +724,10 @@ public final class _ <T> {
      * @throws NoSuchFieldException
      */
     public static <Datastore> Datastore extend(Datastore defaults, Datastore options) throws IllegalAccessException, NoSuchFieldException {
-        for (Field field : options.getClass().getFields()) {
-            if (field.get(options) != null) {
+        for (Field field : options.getClass().getFields())
+            if (field.get(options) != null)
                 defaults.getClass().getField(field.getName()).set(defaults, field.get(options));
-            }
-        }
+
         return defaults;
     }
 
@@ -703,6 +764,15 @@ public final class _ <T> {
 
     // ----- _.join --------------------------------------------------------------------------------
 
+    /**
+     * <p>Joins the {@code values} using the specified {@code separator}. E.g.</p>
+     * <pre>{@code
+     * _.join(_.list("foo", "bar"), "<->") // => "foo<->bar"
+     * }</pre>
+     * @param values the Strings to be joined
+     * @param separator the separator to be used (defaults to {@code ","})
+     * @return the joined values
+     */
     public static String join(Iterable<String> values, final String separator) {
         if (values == null) return "";
 
@@ -721,10 +791,12 @@ public final class _ <T> {
         return joined.toString();
     }
 
+    /** @see #join(Iterable, String) */
     public static String join(Iterable<String> values) {
         return _.join(values, ",");
     }
 
+    /** @see #join(Iterable, String) */
     public String join(final String separator) {
         return _.join(_.map(mValues, new Function<T, String>() {
             @Override
@@ -734,6 +806,7 @@ public final class _ <T> {
         }), separator);
     }
 
+    /** @see #join(Iterable, String) */
     public String join() {
         return join(",");
     }
