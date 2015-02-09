@@ -10,6 +10,7 @@ import com.dominikschreiber.underscore.java.util.function.Supplier;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -387,6 +388,29 @@ public final class _ <T> {
     /** @see #contains(Iterable, Object, BiPredicate) */
     public boolean contains(T needle, BiPredicate<T, T> equals) {
         return _.contains(mValues, needle, equals);
+    }
+
+    // ----- _.sortBy ------------------------------------------------------------------------------
+
+    public static <In> List<In> sortBy(Iterable<In> values, final Function<In, Integer> criterion) {
+        if (values == null) return Collections.emptyList();
+
+        List<In> sorted = new ArrayList<>();
+        for (In value : values)
+            sorted.add(value);
+
+        Collections.sort(sorted, new Comparator<In>() {
+            @Override
+            public int compare(In o1, In o2) {
+                return Integer.compare(criterion.apply(o1), criterion.apply(o2));
+            }
+        });
+
+        return sorted;
+    }
+
+    public _<T> sortBy(final Function<T, Integer> criterion) {
+        return new _<>(_.sortBy(mValues, criterion));
     }
 
     // ----- _.groupBy -----------------------------------------------------------------------------
