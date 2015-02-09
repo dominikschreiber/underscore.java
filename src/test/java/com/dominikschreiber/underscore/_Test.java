@@ -44,6 +44,12 @@ public class _Test {
             return a.equals(b);
         }
     };
+    private Function<String, Integer> length = new Function<String, Integer>() {
+        @Override
+        public Integer apply(String s) {
+            return s.length();
+        }
+    };
 
     // ----- _.each --------------------------------------------------------------------------------
 
@@ -217,6 +223,28 @@ public class _Test {
     public void chainedContainsWithStringEquals() {
         assertTrue(new _<>(_.list("foo", "bar", "baz")).contains("foo", stringEquals));
         assertFalse(new _<>(_.list("foo", "bar")).contains("baz", stringEquals));
+    }
+
+    // ----- _.sortBy ------------------------------------------------------------------------------
+
+    @Test
+    public void staticSortBy() {
+        assertEquals(_.list("foo", "test", "qwert", "zuiopü"), _.sortBy(_.list("test", "zuiopü", "foo", "qwert"), length));
+    }
+
+    @Test
+    public void staticSortByNullInput() {
+        assertEquals(Collections.emptyList(), _.sortBy(null, length));
+    }
+
+    @Test
+    public void chainedSortBy() {
+        assertEquals(_.list("foo", "test", "qwert", "zuiopü"), new _<>(_.list("test", "zuiopü", "foo", "qwert")).sortBy(length).value());
+    }
+
+    @Test
+    public void chainedSortByNullInput() {
+        assertEquals(Collections.emptyList(), new _<String>(null).sortBy(length).value());
     }
 
     // ----- _.groupBy -----------------------------------------------------------------------------
