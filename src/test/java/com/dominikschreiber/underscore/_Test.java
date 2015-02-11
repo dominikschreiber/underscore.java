@@ -819,6 +819,44 @@ public class _Test {
         assertEquals("", new _<>(null).join());
     }
 
+    // ----- _.stringify ---------------------------------------------------------------------------
+
+    @Test
+    public void staticStringifyTerminalCases() {
+        assertEquals("1", _.stringify(1));
+        assertEquals("1.0", _.stringify(1.0));
+        assertEquals("true", _.stringify(true));
+        assertEquals("\"foo\"", _.stringify("foo"));
+    }
+
+    @Test
+    public void staticStringifyListCase() {
+        assertEquals("[0,1,2,3]", _.stringify(_.range(4)));
+    }
+
+    @Test
+    public void staticStringifyMapCase() {
+        Map<String, Integer> json = new HashMap<>();
+        json.put("0", 1);
+        json.put("1", 5);
+        json.put("2", 9);
+        assertEquals("{\"0\":1,\"1\":5,\"2\":9}", _.stringify(json));
+    }
+
+    @Test
+    public void staticStringifyComplexCase() {
+        Map<String, Integer> frequencies = new HashMap<>();
+        frequencies.put("a", 20);
+        frequencies.put("b", 4);
+        frequencies.put("c", 12);
+
+        Map<String, String> complex = new HashMap<>();
+        complex.put("name", _.stringify(_.list("foo", "bar")));
+        complex.put("frequencies", _.stringify(frequencies));
+
+        assertEquals("{\"name\":[\"foo\",\"bar\"],\"frequencies\":{\"a\":20,\"b\":4,\"c\":12}}", _.stringify(complex));
+    }
+
     // ----- _.identity ----------------------------------------------------------------------------
 
     @Test
