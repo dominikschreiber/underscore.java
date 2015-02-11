@@ -835,6 +835,45 @@ public final class _ <T> {
         return join(",");
     }
 
+    // ----- _.stringify ---------------------------------------------------------------------------
+
+    public static String stringify(Object o) {
+        if (o instanceof String) {
+            String s = o.toString();
+            if ((s.startsWith("[") && s.endsWith("]"))
+                || (s.startsWith("{") && s.endsWith("}"))) {
+                return s;
+            } else {
+                return '"' + s + '"';
+            }
+        }
+        if (o instanceof Iterable) {
+            return '[' + new _((Iterable) o)
+                    .map(new Function<Object, String>() {
+                        @Override
+                        public String apply(Object o) {
+                            return _.stringify(o);
+                        }
+                    })
+                    .join() + ']';
+        }
+        if (o instanceof Map) {
+            return '{' + new _(((Map) o).entrySet())
+                    .map(new Function<Map.Entry, String>() {
+                        @Override
+                        public String apply(Map.Entry o) {
+                            return _.stringify(o.getKey()) + ':' + _.stringify(o.getValue());
+                        }
+                    })
+                    .join() + '}';
+        }
+        return o.toString();
+    }
+
+    public String stringify() {
+        return _.stringify(mValues);
+    }
+
     // ----- _.identity ----------------------------------------------------------------------------
 
     /**
