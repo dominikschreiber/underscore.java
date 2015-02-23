@@ -857,6 +857,18 @@ public class _Test {
         assertEquals("{\"name\":[\"foo\",\"bar\"],\"frequencies\":{\"a\":20,\"b\":4,\"c\":12}}", _.stringify(complex));
     }
 
+    @Test
+    public void staticStringifyComplexListCase() {
+        Map<String, String> json1 = new HashMap<>();
+        json1.put("1foo", "[\"bar\"]");
+        json1.put("2goo", "[\"gl\"]");
+        Map<String, String> json2 = new HashMap<>();
+        json2.put("3oo", "[\"ps\"]");
+        json2.put("4no", "[\"oo\"]");
+
+        assertEquals("[{\"1foo\":[\"bar\"],\"2goo\":[\"gl\"]},{\"3oo\":[\"ps\"],\"4no\":[\"oo\"]}]", _.stringify(_.list(json1, json2)));
+    }
+
     // ----- _.identity ----------------------------------------------------------------------------
 
     @Test
