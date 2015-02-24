@@ -914,4 +914,15 @@ public final class _ <T> {
             }
         };
     }
+
+    // ----- _.noop --------------------------------------------------------------------------------
+
+    public static <In> Consumer<In> noop() {
+        return new Consumer<In>() {
+            @Override
+            public void accept(In in) {
+                // noop
+            }
+        };
+    }
 }
