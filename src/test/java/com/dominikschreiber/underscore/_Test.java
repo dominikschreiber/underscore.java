@@ -869,6 +869,20 @@ public class _Test {
         assertEquals("[{\"1foo\":[\"bar\"],\"2goo\":[\"gl\"]},{\"3oo\":[\"ps\"],\"4no\":[\"oo\"]}]", _.stringify(_.list(json1, json2)));
     }
 
+    @Test
+    public void staticStringifyComplexMixedCase() {
+        Map<String, Object> json = new HashMap<>();
+        json.put("string", "thisIsAString");
+        json.put("number", 1337);
+        json.put("list", _.list(1,2,3,4,5));
+        Map<String, Object> nested = new HashMap<>();
+        nested.put("string", "thisIsAnotherString");
+        nested.put("number", 12345);
+        json.put("map", nested);
+
+        assertEquals("{\"number\":1337,\"string\":\"thisIsAString\",\"list\":[1,2,3,4,5],\"map\":{\"number\":12345,\"string\":\"thisIsAnotherString\"}}", _.stringify(json));
+    }
+
     // ----- _.identity ----------------------------------------------------------------------------
 
     @Test
