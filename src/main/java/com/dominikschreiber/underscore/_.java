@@ -71,11 +71,7 @@ public final class _ <T> {
      * <p>calls {@code function} on each value in {@code values}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.each(_.list(1, 2, 3, 4), new Consumer<Integer>() {
-     *     public Void apply(Integer in) {
-     *         System.out.print("." + in + " ");
-     *     }
-     * });
+     * _.each(_.list(1, 2, 3, 4), (in) -> { System.out.print("." + in + " "); });
      * // => .1 .2 .3 .4
      * </pre>
      * @param values the values the function is called on
@@ -101,11 +97,7 @@ public final class _ <T> {
      * <p>creates a {@link List} of the results of applying {@code function} to all {@code values}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.map(_.list(1, 2, 3, 4), new Function<Integer, Integer>() {
-     *     public Integer apply(Integer x) {
-     *         return x * x;
-     *     }
-     * });
+     * _.map(_.list(1, 2, 3, 4), (x) -> { return x * x; });
      * // => a List containing [1, 4, 9, 16]
      * </pre>
      * @param values the values to be mapped with the call of {@code function}
@@ -121,6 +113,7 @@ public final class _ <T> {
         List<Out> result = new ArrayList<Out>();
         for (In value : values)
             result.add(function.apply(value));
+
         return result;
     }
 
@@ -129,17 +122,43 @@ public final class _ <T> {
         return new _<>(_.map(mValues, function));
     }
 
+    /**
+     * <p>creates a {@link Map} of the results of applying {@code function} to all entries of {@code values}</p>
+     * <p>i.e.</p>
+     * <pre>{@code
+     * Map<String, Integer> lengths = new HashMap<>();
+     * lengths.put("foo", 3);
+     * lengths.put("quux", 4);
+     * _.map(lengths, (key, value) -> { return AbstractMap.SimpleEntry(value, key); });
+     * // => reverses lengths ({3: "foo", 4: "quux"})
+     * }</pre>
+     * @param values InKey->InValue mappings
+     * @param function to be applied to (key, value) returning a new map entry
+     * @param <InKey> the type of keys of {@code values}
+     * @param <InValue> the type of values of {@code values}
+     * @param <OutKey> the type of keys the resulting map will have
+     * @param <OutValue> the type of values the resulting map will have
+     * @return OutKey->OutValue mappings produced by applying {@code function} to all entries of {@code value}
+     */
+    public static <InKey, InValue, OutKey, OutValue> Map<OutKey, OutValue> map(Map<InKey,InValue> values, BiFunction<InKey,InValue,Map.Entry<OutKey,OutValue>> function) {
+        if (values == null) return Collections.emptyMap();
+
+        Map<OutKey,OutValue> result = new HashMap<>();
+        for (Map.Entry<InKey,InValue> value : values.entrySet()) {
+            final Map.Entry<OutKey, OutValue> entry = function.apply(value.getKey(), value.getValue());
+            result.put(entry.getKey(), entry.getValue());
+        }
+
+        return result;
+    }
+
     // ----- _.filter ------------------------------------------------------------------------------
 
     /**
      * <p>creates a {@link List} of all {@code values} that match {@code predicate}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.filter(_.list(1, 2, 3, 4), new Predicate<Integer>() {
-     *     public boolean test(Integer x) {
-     *         return x % 2 == 0;
-     *     }
-     * });
+     * _.filter(_.list(1, 2, 3, 4), (x) -> { return x % 2 == 0; });
      * // => a List containing [2, 4]
      * </pre>
      * @param values the values to be filtered
@@ -169,11 +188,7 @@ public final class _ <T> {
      * Breaks once the first matching value is found (does not traverse the whole list then).</p>
      * <p>e.g.</p>
      * <pre>{@code
-     * _.find(_.list(1,2,3,4,5), new Predicate<Integer>() {
-     *     public boolean test(Integer x) {
-     *         return x % 2 == 0;
-     *     }
-     * });
+     * _.find(_.list(1,2,3,4,5), (x) -> { return x % 2 == 0; });
      * // => 2
      * }</pre>
      * @param values
@@ -202,20 +217,12 @@ public final class _ <T> {
      * <p>(this is also known as {@code foldl}, {@code reducel}, {@code foldLeft} or {@code reduceLeft}</p>
      * <p>i.e.</p>
      * <pre>
-     * _.reduce(_.list(1, 2, 3, 4), new BiFunction<Integer, Integer, Integer>() {
-     *     public Integer apply(Integer now, Integer accumulator) {
-     *         return now + accumulator;
-     *     }
-     * }, 0);
+     * _.reduce(_.list(1, 2, 3, 4), (now, accumulator) -> { return now + accumulator; }, 0);
      * // => 10
      * </pre>
      * <p>to make it clear that this is a {@code reduceLeft}, take this example:</p>
      * <pre>
-     * _.reduce(_.list(1, 2, 3, 4), new BiFunction<Integer, Integer, Integer>() {
-     *     public Integer apply(Integer now, Integer accumulator) {
-     *         return now - accumulator;
-     *     }
-     * }, 0);
+     * _.reduce(_.list(1, 2, 3, 4), (now, accumulator) -> { return now - accumulator; }, 0);
      * // => -10 (as (0 - (1 - (2 - (3 - (4))))))
      * // not -2 (foldr would create (4 - (3 - (2 - (1 - (0))))))
      * </pre>
@@ -248,11 +255,7 @@ public final class _ <T> {
      * <p>Returns the {@code values} that <b>do not pass</b> the {@code predicate}.</p>
      * <p>This is the opposite of {@link #filter(Iterable, com.dominikschreiber.underscore.java.util.function.Predicate)}. E.g.:</p>
      * <pre>{@code
-     * _.reject(_.list(1,2,3,4,5), new Predicate<Integer>() {
-     *     public boolean test(Integer i) {
-     *         return i % 2 == 0;
-     *     }
-     * });
+     * _.reject(_.list(1,2,3,4,5), (i) -> { return i % 2 == 0; });
      * // => [1,3,5]
      * }</pre>
      * @param values the values to be checked
@@ -358,12 +361,7 @@ public final class _ <T> {
      * <p>uses {@code equals} to determine equality.</p>
      * <p>e.g.</p>
      * <pre>{@code
-     * _.contains(_.list("abcde", "fghij"), "c", new BiPredicate<String, String>() {
-     *     // tests if any value in the haystack contains the needle
-     *     public boolean test(String hay, String needle) {
-     *         return hay.contains(needle);
-     *     }
-     * });
+     * _.contains(_.list("abcde", "fghij"), "c", (hay, needle) -> { return hay.contains(needle); });
      * // => true ("abcde" contains "c")
      * }</pre>
      * @param haystack the values that should contain {@code needle}
@@ -392,6 +390,17 @@ public final class _ <T> {
 
     // ----- _.sortBy ------------------------------------------------------------------------------
 
+    /**
+     * <p>sorts  {@code values} by {@code criterion}. e.g.</p>
+     * <pre>{@code
+     * _.sortBy(_.list("never", "gon", "na", "give"), (i) -> { return i.length(); });
+     * // => ["na", "gon", "give", "never"]
+     * }</pre>
+     * @param values the values to be sorted
+     * @param criterion the criterion to be applied to each value to sort them
+     * @param <In> the type of {@code values}
+     * @return the sorted list of {@code values}
+     */
     public static <In> List<In> sortBy(Iterable<In> values, final Function<In, Integer> criterion) {
         if (values == null) return Collections.emptyList();
 
@@ -409,6 +418,7 @@ public final class _ <T> {
         return sorted;
     }
 
+    /** @see #sortBy(Iterable, Function) */
     public _<T> sortBy(final Function<T, Integer> criterion) {
         return new _<>(_.sortBy(mValues, criterion));
     }
@@ -784,6 +794,33 @@ public final class _ <T> {
             iterable.add(value);
         }
         return iterable;
+    }
+
+    // ----- _.dictionary --------------------------------------------------------------------------
+
+    /**
+     * <p>creates a map from the list of map {@code entries}</p>
+     * <pre>{@code
+     * _.dictionary(
+     *     new AbstractMap.SimpleEntry("foo", 3),
+     *     new AbstractMap.SimpleEntry("quux", 4)
+     * );
+     * // => {"foo": 3, "quux": 4}
+     * }</pre>
+     * <p>(_.map would clash with this method => is named _.dictionary instead)</p>
+     * @param entries list of map entries
+     * @param <Key> type of the keys
+     * @param <Value> type of the values
+     * @return a map created from the list of map entries
+     */
+    public static <Key,Value> Map<Key,Value> dictionary(Map.Entry<Key, Value>... entries) {
+        if (entries == null) return Collections.emptyMap();
+
+        Map<Key,Value> result = new HashMap<>();
+        for (Map.Entry<Key, Value> entry : entries)
+            result.put(entry.getKey(), entry.getValue());
+
+        return result;
     }
 
     // ----- _.join --------------------------------------------------------------------------------
