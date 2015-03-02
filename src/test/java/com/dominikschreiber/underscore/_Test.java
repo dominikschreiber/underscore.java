@@ -120,14 +120,14 @@ public class _Test {
         lengths.put("foo", "foo".length());
         lengths.put("quux", "quux".length());
 
-        Map<Integer, String> expected = new HashMap<>();
-        expected.put("foo".length(), "foo");
-        expected.put("quux".length(), "quux");
+        Map<Long, String> expected = new HashMap<>();
+        expected.put((long) "foo".length(), "foo");
+        expected.put((long) "quux".length(), "quux");
 
-        Map<Integer, String> actual = _.map(lengths, new BiFunction<String, Integer, Map.Entry<Integer, String>>() {
+        Map<Long, String> actual = _.map(lengths, new BiFunction<String, Integer, Map.Entry<Long, String>>() {
             @Override
-            public Map.Entry<Integer, String> apply(String s, Integer integer) {
-                return new AbstractMap.SimpleEntry<>(integer, s);
+            public Map.Entry<Long, String> apply(String s, Integer integer) {
+                return new AbstractMap.SimpleEntry<>((long) integer, s);
             }
         });
 
@@ -505,17 +505,17 @@ public class _Test {
 
     @Test
     public void staticZipSameLengths() {
-        assertEquals(_.list(_.list(0,3), _.list(1,4), _.list(2,5)), _.zip(_.range(3), _.range(3,6)));
+        assertEquals(_.list(_.entry(0,3), _.entry(1,4), _.entry(2,5)), _.zip(_.range(3), _.range(3,6)));
     }
 
     @Test
     public void staticZipFirstIsLonger() {
-        assertEquals(_.list(_.list(0,3), _.list(1,4)), _.zip(_.range(3), _.range(3,5)));
+        assertEquals(_.list(_.entry(0,3), _.entry(1,4)), _.zip(_.range(3), _.range(3,5)));
     }
 
     @Test
     public void staticZipSecondIsLonger() {
-        assertEquals(_.list(_.list(0,3), _.list(1,4), _.list(2,5)), _.zip(_.range(3), _.range(3,9)));
+        assertEquals(_.list(_.entry(0,3), _.entry(1,4), _.entry(2,5)), _.zip(_.range(3), _.range(3,9)));
     }
 
     @Test
@@ -526,19 +526,19 @@ public class _Test {
 
     @Test
     public void chainedZipSameLengths() {
-        assertEquals(_.list(_.list(0,4), _.list(1,5), _.list(2,6), _.list(3,7)),
+        assertEquals(_.list(_.entry(0,4), _.entry(1,5), _.entry(2,6), _.entry(3,7)),
                 new _<>(_.range(4)).zip(_.range(4,8)).value());
     }
 
     @Test
     public void chainedZipFirstIsLonger() {
-        assertEquals(_.list(_.list(0,3), _.list(1,4)),
+        assertEquals(_.list(_.entry(0,3), _.entry(1,4)),
                 new _<>(_.range(4)).zip(_.range(3,5)).value());
     }
 
     @Test
     public void chainedZipSecondIsLonger() {
-        assertEquals(_.list(_.list(0,3), _.list(1,4)),
+        assertEquals(_.list(_.entry(0,3), _.entry(1,4)),
                 new _<>(_.range(2)).zip(_.range(3,9)).value());
     }
 
@@ -806,20 +806,23 @@ public class _Test {
         expected.put("bar", "bar".length());
 
         Map<String, Integer> actual = _.dictionary(
-                entry("foo", "foo".length()),
-                entry("bar", "bar".length())
+                _.entry("foo", "foo".length()),
+                _.entry("bar", "bar".length())
         );
 
         assertEquals(expected, actual);
     }
 
-    private <K,V> Map.Entry<K,V> entry(K key, V value) {
-        return new AbstractMap.SimpleEntry<>(key, value);
-    }
-
     @Test
     public void dictionaryWithNullInput() {
         assertEquals(Collections.emptyMap(), _.dictionary(null));
+    }
+
+    // ----- _.entry -------------------------------------------------------------------------------
+
+    @Test
+    public void entry() {
+        assertEquals(new AbstractMap.SimpleEntry<>("foo", 3), _.entry("foo", 3));
     }
 
     // ----- _.join --------------------------------------------------------------------------------

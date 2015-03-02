@@ -8,6 +8,7 @@ import com.dominikschreiber.underscore.java.util.function.Predicate;
 import com.dominikschreiber.underscore.java.util.function.Supplier;
 
 import java.lang.reflect.Field;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -94,35 +95,6 @@ public final class _ <T> {
     // ----- _.map ---------------------------------------------------------------------------------
 
     /**
-     * <p>creates a {@link List} of the results of applying {@code function} to all {@code values}</p>
-     * <p>i.e.</p>
-     * <pre>
-     * _.map(_.list(1, 2, 3, 4), (x) -> { return x * x; });
-     * // => a List containing [1, 4, 9, 16]
-     * </pre>
-     * @param values the values to be mapped with the call of {@code function}
-     * @param function the function to call on every element of {@code values}
-     * @param <In> type of the elements in {@code values}
-     * @param <Out> type of the result of {@code function}
-     * @return a List of values of type {@code <Out>}, where {@code function} is
-     * applied to all elements of {@code values}
-     */
-    public static <In, Out> List<Out> map(Iterable<In> values, Function<In, Out> function) {
-        if (values == null) return Collections.emptyList();
-
-        List<Out> result = new ArrayList<Out>();
-        for (In value : values)
-            result.add(function.apply(value));
-
-        return result;
-    }
-
-    /** @see #map(Iterable, Function) */
-    public <Out> _<Out> map(Function<T, Out> function) {
-        return new _<>(_.map(mValues, function));
-    }
-
-    /**
      * <p>creates a {@link Map} of the results of applying {@code function} to all entries of {@code values}</p>
      * <p>i.e.</p>
      * <pre>{@code
@@ -150,6 +122,35 @@ public final class _ <T> {
         }
 
         return result;
+    }
+
+    /**
+     * <p>creates a {@link List} of the results of applying {@code function} to all {@code values}</p>
+     * <p>i.e.</p>
+     * <pre>
+     * _.map(_.list(1, 2, 3, 4), (x) -> { return x * x; });
+     * // => a List containing [1, 4, 9, 16]
+     * </pre>
+     * @param values the values to be mapped with the call of {@code function}
+     * @param function the function to call on every element of {@code values}
+     * @param <In> type of the elements in {@code values}
+     * @param <Out> type of the result of {@code function}
+     * @return a List of values of type {@code <Out>}, where {@code function} is
+     * applied to all elements of {@code values}
+     */
+    public static <In, Out> List<Out> map(Iterable<In> values, Function<In, Out> function) {
+        if (values == null) return Collections.emptyList();
+
+        List<Out> result = new ArrayList<Out>();
+        for (In value : values)
+            result.add(function.apply(value));
+
+        return result;
+    }
+
+    /** @see #map(Iterable, Function) */
+    public <Out> _<Out> map(Function<T, Out> function) {
+        return new _<>(_.map(mValues, function));
     }
 
     // ----- _.filter ------------------------------------------------------------------------------
@@ -606,32 +607,34 @@ public final class _ <T> {
     /**
      * <p>returns a merged list of the lists {@code first} and {@code second}. E.g.</p>
      * <pre>{@code
-     * _.zip(_.list(1,2,3), _.list(4,5,6)) // => [[1,4], [2,5], [3,6]]
+     * _.zip(_.list(1,2,3), _.list(4,5,6)) // => [(1,4), (2,5), (3,6)]
      * }</pre>
      * <p>if the lists have different lengths, the merged list will be as long as the shorter list. I.e.</p>
      * <pre>{@code
-     * _.zip(_.list(1,2,3), _.list(4,5,6,7,8,9)) // => [[1,4], [2,5], [3,6]]
+     * _.zip(_.list(1,2,3), _.list(4,5,6,7,8,9)) // => [(1,4), (2,5), (3,6)]
      * }</pre>
      * @param first the first list of values
      * @param second the second list of values
-     * @param <In> the type of values in {@code first} and {@code second}
+     * @param <F> the type of values in {@code first}
+     * @param <S> the type of values in {@code second}
      * @return the merged list
      */
-    public static <In> List<List<In>> zip(Iterable<In> first, Iterable<In> second) {
+    public static <F,S> List<Map.Entry<F,S>> zip(Iterable<F> first, Iterable<S> second) {
         if (first == null || second == null) return Collections.emptyList();
 
-        List<List<In>> zipped = new ArrayList<>();
-        Iterator<In> f, s;
+        List<Map.Entry<F,S>> zipped = new ArrayList<>();
+        Iterator<F> f;
+        Iterator<S> s;
 
         for (f = first.iterator(), s = second.iterator(); f.hasNext() && s.hasNext();/* nothing */) {
-            zipped.add(_.list(f.next(), s.next()));
+            zipped.add(_.entry(f.next(), s.next()));
         }
 
         return zipped;
     }
 
     /** @see #zip(Iterable, Iterable) */
-    public _<List<T>> zip(Iterable<T> other) {
+    public <O> _<Map.Entry<T,O>> zip(Iterable<O> other) {
         return new _<>(_.zip(mValues, other));
     }
 
@@ -821,6 +824,12 @@ public final class _ <T> {
             result.put(entry.getKey(), entry.getValue());
 
         return result;
+    }
+
+    // ----- _.entry -------------------------------------------------------------------------------
+
+    public static <Key,Value> Map.Entry<Key,Value> entry(Key key, Value value) {
+        return new AbstractMap.SimpleEntry<>(key, value);
     }
 
     // ----- _.join --------------------------------------------------------------------------------
