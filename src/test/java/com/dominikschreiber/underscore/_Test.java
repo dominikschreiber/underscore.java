@@ -8,6 +8,7 @@ import com.dominikschreiber.underscore.java.util.function.Predicate;
 
 import org.junit.Test;
 
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -111,6 +112,26 @@ public class _Test {
                 .value();
 
         assertEquals(Arrays.asList(new Integer[] {1, 4, 9, 16, 25}), result);
+    }
+
+    @Test
+    public void staticMapMap() {
+        Map<String, Integer> lengths = new HashMap<>();
+        lengths.put("foo", "foo".length());
+        lengths.put("quux", "quux".length());
+
+        Map<Integer, String> expected = new HashMap<>();
+        expected.put("foo".length(), "foo");
+        expected.put("quux".length(), "quux");
+
+        Map<Integer, String> actual = _.map(lengths, new BiFunction<String, Integer, Map.Entry<Integer, String>>() {
+            @Override
+            public Map.Entry<Integer, String> apply(String s, Integer integer) {
+                return new AbstractMap.SimpleEntry<>(integer, s);
+            }
+        });
+
+        assertEquals(expected, actual);
     }
 
     // ----- _.filter ------------------------------------------------------------------------------
@@ -774,6 +795,31 @@ public class _Test {
     @Test
     public void listWithNullInput() {
         assertEquals(Collections.emptyList(), _.list());
+    }
+
+    // ----- _.dictionary --------------------------------------------------------------------------
+
+    @Test
+    public void dictionary() {
+        Map<String, Integer> expected = new HashMap<>();
+        expected.put("foo", "foo".length());
+        expected.put("bar", "bar".length());
+
+        Map<String, Integer> actual = _.dictionary(
+                entry("foo", "foo".length()),
+                entry("bar", "bar".length())
+        );
+
+        assertEquals(expected, actual);
+    }
+
+    private <K,V> Map.Entry<K,V> entry(K key, V value) {
+        return new AbstractMap.SimpleEntry<>(key, value);
+    }
+
+    @Test
+    public void dictionaryWithNullInput() {
+        assertEquals(Collections.emptyMap(), _.dictionary(null));
     }
 
     // ----- _.join --------------------------------------------------------------------------------
