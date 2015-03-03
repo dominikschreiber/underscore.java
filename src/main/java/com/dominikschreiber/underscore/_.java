@@ -66,6 +66,13 @@ public final class _ <T> {
         return mValues;
     }
 
+    // ----- _.tap ---------------------------------------------------------------------------------
+
+    public _<T> tap(Consumer<T> function) {
+        _.each(mValues, function);
+        return this;
+    }
+
     // ----- _.each --------------------------------------------------------------------------------
 
     /**
@@ -402,7 +409,7 @@ public final class _ <T> {
      * @param <In> the type of {@code values}
      * @return the sorted list of {@code values}
      */
-    public static <In> List<In> sortBy(Iterable<In> values, final Function<In, Integer> criterion) {
+    public static <In> List<In> sortBy(Iterable<In> values, final Function<In, Long> criterion) {
         if (values == null) return Collections.emptyList();
 
         List<In> sorted = new ArrayList<>();
@@ -412,7 +419,7 @@ public final class _ <T> {
         Collections.sort(sorted, new Comparator<In>() {
             @Override
             public int compare(In o1, In o2) {
-                return Integer.compare(criterion.apply(o1), criterion.apply(o2));
+                return Long.compare(criterion.apply(o1), criterion.apply(o2));
             }
         });
 
@@ -420,7 +427,7 @@ public final class _ <T> {
     }
 
     /** @see #sortBy(Iterable, Function) */
-    public _<T> sortBy(final Function<T, Integer> criterion) {
+    public _<T> sortBy(final Function<T, Long> criterion) {
         return new _<>(_.sortBy(mValues, criterion));
     }
 
@@ -570,8 +577,13 @@ public final class _ <T> {
     }
 
     /** @see #last(Iterable, int) */
-    public static <In> List<In> last(Iterable<In> values) {
-        return _.last(values, 1);
+    public static <In> In last(Iterable<In> values) {
+        Iterator<In> iterator = values.iterator();
+        In last = null;
+        while (iterator.hasNext()) {
+            last = iterator.next();
+        }
+        return last;
     }
 
     /** @see #last(Iterable, int) */
@@ -580,8 +592,8 @@ public final class _ <T> {
     }
 
     /** @see #last(int) */
-    public _<T> last() {
-        return last(1);
+    public T last() {
+        return _.last(mValues);
     }
 
     // ----- _.rest --------------------------------------------------------------------------------
@@ -816,6 +828,7 @@ public final class _ <T> {
      * @param <Value> type of the values
      * @return a map created from the list of map entries
      */
+    @SafeVarargs
     public static <Key,Value> Map<Key,Value> dictionary(Map.Entry<Key, Value>... entries) {
         if (entries == null) return Collections.emptyMap();
 
