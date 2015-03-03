@@ -45,10 +45,10 @@ public class _Test {
             return a.equals(b);
         }
     };
-    private Function<String, Integer> length = new Function<String, Integer>() {
+    private Function<String, Long> length = new Function<String, Long>() {
         @Override
-        public Integer apply(String s) {
-            return s.length();
+        public Long apply(String s) {
+            return (long) s.length();
         }
     };
 
@@ -461,7 +461,7 @@ public class _Test {
 
     @Test
     public void staticLastDefaultN() {
-        assertEquals(_.range(4, 5), _.last(_.range(1, 5)));
+        assertTrue(4 == _.last(_.range(1, 5)));
     }
 
     @Test
@@ -471,7 +471,7 @@ public class _Test {
 
     @Test
     public void chainedLastDefaultN() {
-        assertEquals(_.range(4, 5), new _<>(_.range(1, 5)).last().value());
+        assertTrue(4 == new _<>(_.range(1, 5)).last());
     }
 
     // ----- _.rest --------------------------------------------------------------------------------
