@@ -503,9 +503,17 @@ public final class _ <T> {
         return first;
     }
 
-    /** @see #first(Iterable, int)  */
-    public static <In> List<In> first(Iterable<In> values) {
-        return _.first(values, 1);
+    /**
+     * <p>returns the first element of {@code values} </p>
+     * <p>e.g.</p>
+     * <pre>{@code
+     * _.first(_.list("never","gonna","give","you","up"));
+     * // => "never"
+     * }</pre>
+     */
+    public static <In> In first(Iterable<In> values) {
+        if (values == null || !values.iterator().hasNext()) return null;
+        return values.iterator().next();
     }
 
     /** @see #first(Iterable, int)  */
@@ -513,9 +521,9 @@ public final class _ <T> {
         return new _<>(_.first(mValues, n));
     }
 
-    /** @see #first(int) */
-    public _<T> first() {
-        return first(1);
+    /** @see #first(Iterable) */
+    public T first() {
+        return _.first(mValues);
     }
 
     // ----- _.initial -----------------------------------------------------------------------------

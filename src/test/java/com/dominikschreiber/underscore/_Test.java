@@ -409,7 +409,7 @@ public class _Test {
 
     @Test
     public void staticFirstDefaultN() {
-        assertEquals(_.range(1, 2), _.first(_.range(1, 5)));
+        assertTrue(1 == _.first(_.range(1, 5)));
     }
 
     @Test
@@ -419,10 +419,7 @@ public class _Test {
 
     @Test
     public void chainedFirstDefaultN() {
-        assertEquals(
-                _.range(1, 2),
-                new _<>(_.range(1, 5)).first().value()
-        );
+        assertTrue(1 == new _<>(_.range(1, 5)).first());
     }
 
     // ----- _.initial -----------------------------------------------------------------------------
