@@ -905,6 +905,9 @@ public final class _ <T> {
     // ----- _.stringify ---------------------------------------------------------------------------
 
     public static String stringify(Object o) {
+        if (o == null) {
+            return "";
+        }
         if (o instanceof String) {
             String s = o.toString();
             if ((s.startsWith("[") && s.endsWith("]"))
