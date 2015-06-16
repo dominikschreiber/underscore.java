@@ -419,7 +419,7 @@ public final class _ <T> {
         Collections.sort(sorted, new Comparator<In>() {
             @Override
             public int compare(In o1, In o2) {
-                return Long.compare(criterion.apply(o1), criterion.apply(o2));
+                return Long.valueOf(criterion.apply(o1)).compareTo(Long.valueOf(criterion.apply(o2)));
             }
         });
 
@@ -808,7 +808,6 @@ public final class _ <T> {
      * @param <In> the type the items in the list will have
      * @return a list that contains exactly the values
      */
-    @SafeVarargs
     public static <In> List<In> list(In... values) {
         if (values == null) return Collections.emptyList();
 
@@ -836,7 +835,6 @@ public final class _ <T> {
      * @param <Value> type of the values
      * @return a map created from the list of map entries
      */
-    @SafeVarargs
     public static <Key,Value> Map<Key,Value> dictionary(Map.Entry<Key, Value>... entries) {
         if (entries == null) return Collections.emptyMap();
 
