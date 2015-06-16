@@ -1,6 +1,9 @@
 apply plugin: 'java'
 
-sourceCompatibility = 1.7
+allprojects {
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+}
 
 repositories {
     mavenCentral()
@@ -8,6 +11,6 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    
+
     testCompile 'junit:junit:4.12'
 }

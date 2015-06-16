@@ -81,7 +81,7 @@ public class _Test {
     @Test
     public void chainedEachWithStringBuilder() {
         final StringBuilder result = new StringBuilder();
-        new _<>(_.range(1, 6))
+        new _<Integer>(_.range(1, 6))
                 .each(new Consumer<Integer>() {
                     @Override
                     public void accept(Integer input) {
@@ -107,7 +107,7 @@ public class _Test {
 
     @Test
     public void chainedMapWithSquare() {
-        Iterable<Integer> result = new _<>(_.range(1, 6))
+        Iterable<Integer> result = new _<Integer>(_.range(1, 6))
                 .map(square)
                 .value();
 
@@ -116,18 +116,18 @@ public class _Test {
 
     @Test
     public void staticMapMap() {
-        Map<String, Integer> lengths = new HashMap<>();
+        Map<String, Integer> lengths = new HashMap<String, Integer>();
         lengths.put("foo", "foo".length());
         lengths.put("quux", "quux".length());
 
-        Map<Long, String> expected = new HashMap<>();
+        Map<Long, String> expected = new HashMap<Long, String>();
         expected.put((long) "foo".length(), "foo");
         expected.put((long) "quux".length(), "quux");
 
         Map<Long, String> actual = _.map(lengths, new BiFunction<String, Integer, Map.Entry<Long, String>>() {
             @Override
             public Map.Entry<Long, String> apply(String s, Integer integer) {
-                return new AbstractMap.SimpleEntry<>((long) integer, s);
+                return new AbstractMap.SimpleEntry<Long, String>((long) integer, s);
             }
         });
 
@@ -150,7 +150,7 @@ public class _Test {
 
     @Test
     public void chainedFilterWithIsEven() {
-        Iterable<Integer> result = new _<>(_.range(1, 6))
+        Iterable<Integer> result = new _<Integer>(_.range(1, 6))
                 .filter(isEven)
                 .value();
 
@@ -176,7 +176,7 @@ public class _Test {
     public void chainedFindWithIsEven() {
         assertEquals(
                 2,
-                (int) new _<>(_.range(1, 6)).find(isEven)
+                (int) new _<Integer>(_.range(1, 6)).find(isEven)
         );
     }
 
@@ -199,7 +199,7 @@ public class _Test {
 
     @Test
     public void chainedReduceWithSum() {
-        Integer result = new _<>(_.range(1, 6))
+        Integer result = new _<Integer>(_.range(1, 6))
                 .reduce(sum, 0);
 
         assertTrue(1 + 2 + 3 + 4 + 5 == result);
@@ -207,7 +207,7 @@ public class _Test {
 
     @Test
     public void chainedComplexWithSumOfEvenSquares() {
-        Integer sumOfEvenSquares = new _<>(_.range(1, 11))
+        Integer sumOfEvenSquares = new _<Integer>(_.range(1, 11))
                 .map(square)
                 .filter(isEven)
                 .reduce(sum, 0);
@@ -230,8 +230,8 @@ public class _Test {
 
     @Test
     public void chainedContainsWithIntegers() {
-        assertTrue(new _<>(_.range(1, 6)).contains(4));
-        assertFalse(new _<>(_.range(1, 4)).contains(6));
+        assertTrue(new _<Integer>(_.range(1, 6)).contains(4));
+        assertFalse(new _<Integer>(_.range(1, 4)).contains(6));
     }
 
     @Test
@@ -242,8 +242,8 @@ public class _Test {
 
     @Test
     public void chainedContainsWithStringEquals() {
-        assertTrue(new _<>(_.list("foo", "bar", "baz")).contains("foo", stringEquals));
-        assertFalse(new _<>(_.list("foo", "bar")).contains("baz", stringEquals));
+        assertTrue(new _<String>(_.list("foo", "bar", "baz")).contains("foo", stringEquals));
+        assertFalse(new _<String>(_.list("foo", "bar")).contains("baz", stringEquals));
     }
 
     // ----- _.sortBy ------------------------------------------------------------------------------
@@ -260,7 +260,7 @@ public class _Test {
 
     @Test
     public void chainedSortBy() {
-        assertEquals(_.list("foo", "test", "qwert", "zuiopü"), new _<>(_.list("test", "zuiopü", "foo", "qwert")).sortBy(length).value());
+        assertEquals(_.list("foo", "test", "qwert", "zuiopü"), new _<String>(_.list("test", "zuiopü", "foo", "qwert")).sortBy(length).value());
     }
 
     @Test
@@ -272,7 +272,7 @@ public class _Test {
 
     @Test
     public void staticGroupBy() {
-        Map<Integer, List<String>> expected = new HashMap<>();
+        Map<Integer, List<String>> expected = new HashMap<Integer, List<String>>();
         expected.put(3, _.list("foo", "bar", "baz"));
         expected.put(4, _.list("this", "shit"));
 
@@ -290,11 +290,11 @@ public class _Test {
 
     @Test
     public void chainedGroupBy() {
-        Map<Integer, List<String>> expected = new HashMap<>();
+        Map<Integer, List<String>> expected = new HashMap<Integer, List<String>>();
         expected.put(3, _.list("foo", "bar", "baz"));
         expected.put(4, _.list("this", "shit"));
 
-        assertEquals(expected, new _<>(_.list("foo", "bar", "baz", "this", "shit"))
+        assertEquals(expected, new _<String>(_.list("foo", "bar", "baz", "this", "shit"))
                 .groupBy(new Function<String, Integer>() {
                     public Integer apply(String s) {
                         return s.length();
@@ -322,7 +322,7 @@ public class _Test {
 
     @Test
     public void chainedRejectWithIsEven() {
-        assertEquals(_.list(1,3,5), new _<>(_.range(1, 6)).reject(isEven).value());
+        assertEquals(_.list(1,3,5), new _<Integer>(_.range(1, 6)).reject(isEven).value());
     }
 
     @Test
@@ -345,8 +345,8 @@ public class _Test {
 
     @Test
     public void chainedEvery() {
-        assertTrue(new _<>(_.list(2,4,6)).every(isEven));
-        assertFalse(new _<>(_.range(1, 6)).every(isEven));
+        assertTrue(new _<Integer>(_.list(2,4,6)).every(isEven));
+        assertFalse(new _<Integer>(_.range(1, 6)).every(isEven));
     }
 
     @Test
@@ -369,8 +369,8 @@ public class _Test {
 
     @Test
     public void chainedSome() {
-        assertTrue(new _<>(_.range(1, 6)).some(isEven));
-        assertFalse(new _<>(_.list(1,3)).some(isEven));
+        assertTrue(new _<Integer>(_.range(1, 6)).some(isEven));
+        assertFalse(new _<Integer>(_.list(1,3)).some(isEven));
     }
 
     @Test
@@ -392,7 +392,7 @@ public class _Test {
 
     @Test
     public void chainedSize() {
-        assertEquals(3, new _<>(_.range(1, 4)).size());
+        assertEquals(3, new _<Integer>(_.range(1, 4)).size());
     }
 
     // ----- _.first -------------------------------------------------------------------------------
@@ -414,12 +414,12 @@ public class _Test {
 
     @Test
     public void chainedFirst() {
-        assertEquals(_.range(1, 4),new _<>(_.range(1, 5)).first(3).value());
+        assertEquals(_.range(1, 4),new _<Integer>(_.range(1, 5)).first(3).value());
     }
 
     @Test
     public void chainedFirstDefaultN() {
-        assertTrue(1 == new _<>(_.range(1, 5)).first());
+        assertTrue(1 == new _<Integer>(_.range(1, 5)).first());
     }
 
     // ----- _.initial -----------------------------------------------------------------------------
@@ -441,12 +441,12 @@ public class _Test {
 
     @Test
     public void chainedInitial() {
-        assertEquals(_.list("foo"), new _<>(_.list("foo", "bar", "baz")).initial(2).value());
+        assertEquals(_.list("foo"), new _<String>(_.list("foo", "bar", "baz")).initial(2).value());
     }
 
     @Test
     public void chainedInitialDefaultN() {
-        assertEquals(_.list("foo", "bar"), new _<>(_.list("foo", "bar", "baz")).initial().value());
+        assertEquals(_.list("foo", "bar"), new _<String>(_.list("foo", "bar", "baz")).initial().value());
     }
 
     // ----- _.last --------------------------------------------------------------------------------
@@ -463,12 +463,12 @@ public class _Test {
 
     @Test
     public void chainedLast() {
-        assertEquals(_.range(4, 6), new _<>(_.range(1, 6)).last(2).value());
+        assertEquals(_.range(4, 6), new _<Integer>(_.range(1, 6)).last(2).value());
     }
 
     @Test
     public void chainedLastDefaultN() {
-        assertTrue(4 == new _<>(_.range(1, 5)).last());
+        assertTrue(4 == new _<Integer>(_.range(1, 5)).last());
     }
 
     // ----- _.rest --------------------------------------------------------------------------------
@@ -490,12 +490,12 @@ public class _Test {
 
     @Test
     public void chainedRest() {
-        assertEquals(_.range(3, 5), new _<>(_.range(1, 5)).rest(2).value());
+        assertEquals(_.range(3, 5), new _<Integer>(_.range(1, 5)).rest(2).value());
     }
 
     @Test
     public void chainedRestDefaultN() {
-        assertEquals(_.range(2, 5), new _<>(_.range(1, 5)).rest().value());
+        assertEquals(_.range(2, 5), new _<Integer>(_.range(1, 5)).rest().value());
     }
 
     // ----- _.zip ---------------------------------------------------------------------------------
@@ -524,24 +524,24 @@ public class _Test {
     @Test
     public void chainedZipSameLengths() {
         assertEquals(_.list(_.entry(0,4), _.entry(1,5), _.entry(2,6), _.entry(3,7)),
-                new _<>(_.range(4)).zip(_.range(4,8)).value());
+                new _<Integer>(_.range(4)).zip(_.range(4,8)).value());
     }
 
     @Test
     public void chainedZipFirstIsLonger() {
         assertEquals(_.list(_.entry(0,3), _.entry(1,4)),
-                new _<>(_.range(4)).zip(_.range(3,5)).value());
+                new _<Integer>(_.range(4)).zip(_.range(3,5)).value());
     }
 
     @Test
     public void chainedZipSecondIsLonger() {
         assertEquals(_.list(_.entry(0,3), _.entry(1,4)),
-                new _<>(_.range(2)).zip(_.range(3,9)).value());
+                new _<Integer>(_.range(2)).zip(_.range(3,9)).value());
     }
 
     @Test
     public void chainedZipNullInput() {
-        assertEquals(Collections.emptyList(), new _<>(_.range(10)).zip(null).value());
+        assertEquals(Collections.emptyList(), new _<Integer>(_.range(10)).zip(null).value());
     }
 
     // ----- _.range -------------------------------------------------------------------------------
@@ -798,7 +798,7 @@ public class _Test {
 
     @Test
     public void dictionary() {
-        Map<String, Integer> expected = new HashMap<>();
+        Map<String, Integer> expected = new HashMap<String, Integer>();
         expected.put("foo", "foo".length());
         expected.put("bar", "bar".length());
 
@@ -812,14 +812,14 @@ public class _Test {
 
     @Test
     public void dictionaryWithNullInput() {
-        assertEquals(Collections.emptyMap(), _.dictionary(null));
+        assertEquals(Collections.emptyMap(), _.dictionary((Map.Entry) null));
     }
 
     // ----- _.entry -------------------------------------------------------------------------------
 
     @Test
     public void entry() {
-        assertEquals(new AbstractMap.SimpleEntry<>("foo", 3), _.entry("foo", 3));
+        assertEquals(new AbstractMap.SimpleEntry<String,Integer>("foo", 3), _.entry("foo", 3));
     }
 
     // ----- _.join --------------------------------------------------------------------------------
@@ -847,22 +847,22 @@ public class _Test {
 
     @Test
     public void chainedJoin() {
-        assertEquals("foo::bar", new _<>(_.list("foo", "bar")).join("::"));
+        assertEquals("foo::bar", new _<String>(_.list("foo", "bar")).join("::"));
     }
 
     @Test
     public void chainedJoinDefaultSeparator() {
-        assertEquals("foo,bar", new _<>(_.list("foo", "bar")).join());
+        assertEquals("foo,bar", new _<String>(_.list("foo", "bar")).join());
     }
 
     @Test
     public void chainedJoinWithNullInput() {
-        assertEquals("", new _<>(null).join("::"));
+        assertEquals("", new _<String>(null).join("::"));
     }
 
     @Test
     public void chainedJoinDefaultSeparatorWithNullInput() {
-        assertEquals("", new _<>(null).join());
+        assertEquals("", new _<String>(null).join());
     }
 
     // ----- _.stringify ---------------------------------------------------------------------------
@@ -882,7 +882,7 @@ public class _Test {
 
     @Test
     public void staticStringifyMapCase() {
-        Map<String, Integer> json = new HashMap<>();
+        Map<String, Integer> json = new HashMap<String, Integer>();
         json.put("0", 1);
         json.put("1", 5);
         json.put("2", 9);
@@ -891,12 +891,12 @@ public class _Test {
 
     @Test
     public void staticStringifyComplexCase() {
-        Map<String, Integer> frequencies = new HashMap<>();
+        Map<String, Integer> frequencies = new HashMap<String, Integer>();
         frequencies.put("a", 20);
         frequencies.put("b", 4);
         frequencies.put("c", 12);
 
-        Map<String, String> complex = new HashMap<>();
+        Map<String, String> complex = new HashMap<String, String>();
         complex.put("name", _.stringify(_.list("foo", "bar")));
         complex.put("frequencies", _.stringify(frequencies));
 
@@ -905,10 +905,10 @@ public class _Test {
 
     @Test
     public void staticStringifyComplexListCase() {
-        Map<String, String> json1 = new HashMap<>();
+        Map<String, String> json1 = new HashMap<String, String>();
         json1.put("1foo", "[\"bar\"]");
         json1.put("2goo", "[\"gl\"]");
-        Map<String, String> json2 = new HashMap<>();
+        Map<String, String> json2 = new HashMap<String, String>();
         json2.put("3oo", "[\"ps\"]");
         json2.put("4no", "[\"oo\"]");
 
@@ -917,11 +917,11 @@ public class _Test {
 
     @Test
     public void staticStringifyComplexMixedCase() {
-        Map<String, Object> json = new HashMap<>();
+        Map<String, Object> json = new HashMap<String, Object>();
         json.put("string", "thisIsAString");
         json.put("number", 1337);
         json.put("list", _.list(1,2,3,4,5));
-        Map<String, Object> nested = new HashMap<>();
+        Map<String, Object> nested = new HashMap<String, Object>();
         nested.put("string", "thisIsAnotherString");
         nested.put("number", 12345);
         json.put("map", nested);

@@ -122,7 +122,7 @@ public final class _ <T> {
     public static <InKey, InValue, OutKey, OutValue> Map<OutKey, OutValue> map(Map<InKey,InValue> values, BiFunction<InKey,InValue,Map.Entry<OutKey,OutValue>> function) {
         if (values == null) return Collections.emptyMap();
 
-        Map<OutKey,OutValue> result = new HashMap<>();
+        Map<OutKey,OutValue> result = new HashMap<OutKey,OutValue>();
         for (Map.Entry<InKey,InValue> value : values.entrySet()) {
             final Map.Entry<OutKey, OutValue> entry = function.apply(value.getKey(), value.getValue());
             result.put(entry.getKey(), entry.getValue());
@@ -157,7 +157,7 @@ public final class _ <T> {
 
     /** @see #map(Iterable, Function) */
     public <Out> _<Out> map(Function<T, Out> function) {
-        return new _<>(_.map(mValues, function));
+        return new _<Out>(_.map(mValues, function));
     }
 
     // ----- _.filter ------------------------------------------------------------------------------
@@ -177,7 +177,7 @@ public final class _ <T> {
     public static <In> List<In> filter(Iterable<In> values, Predicate<In> predicate) {
         if (values == null) return Collections.emptyList();
 
-        List<In> result = new ArrayList<>();
+        List<In> result = new ArrayList<In>();
         for (In value : values)
             if (predicate.test(value))
                 result.add(value);
@@ -186,7 +186,7 @@ public final class _ <T> {
 
     /** @see #filter(Iterable, Predicate) */
     public _<T> filter(Predicate<T> predicate) {
-        return new _<>(_.filter(mValues, predicate));
+        return new _<T>(_.filter(mValues, predicate));
     }
 
     // ----- _.find --------------------------------------------------------------------------------
@@ -274,7 +274,7 @@ public final class _ <T> {
     public static <In> List<In> reject(Iterable<In> values, Predicate<In> predicate) {
         if (values == null) return Collections.emptyList();
 
-        List<In> reject = new ArrayList<>();
+        List<In> reject = new ArrayList<In>();
 
         for (In value : values)
             if (!predicate.test(value))
@@ -285,7 +285,7 @@ public final class _ <T> {
 
     /** @see #reject(Iterable, com.dominikschreiber.underscore.java.util.function.Predicate) */
     public _<T> reject(Predicate<T> predicate) {
-        return new _<>(_.reject(mValues, predicate));
+        return new _<T>(_.reject(mValues, predicate));
     }
 
     // ----- _.every -------------------------------------------------------------------------------
@@ -412,7 +412,7 @@ public final class _ <T> {
     public static <In> List<In> sortBy(Iterable<In> values, final Function<In, Long> criterion) {
         if (values == null) return Collections.emptyList();
 
-        List<In> sorted = new ArrayList<>();
+        List<In> sorted = new ArrayList<In>();
         for (In value : values)
             sorted.add(value);
 
@@ -428,7 +428,7 @@ public final class _ <T> {
 
     /** @see #sortBy(Iterable, Function) */
     public _<T> sortBy(final Function<T, Long> criterion) {
-        return new _<>(_.sortBy(mValues, criterion));
+        return new _<T>(_.sortBy(mValues, criterion));
     }
 
     // ----- _.groupBy -----------------------------------------------------------------------------
@@ -436,7 +436,7 @@ public final class _ <T> {
     public static <In, Key> Map<Key, List<In>> groupBy(Iterable<In> values, Function<In, Key> group) {
         if (values == null) return Collections.emptyMap();
 
-        Map<Key, List<In>> result = new HashMap<>();
+        Map<Key, List<In>> result = new HashMap<Key, List<In>>();
 
         for (In value : values) {
             Key key = group.apply(value);
@@ -518,7 +518,7 @@ public final class _ <T> {
 
     /** @see #first(Iterable, int)  */
     public _<T> first(int n) {
-        return new _<>(_.first(mValues, n));
+        return new _<T>(_.first(mValues, n));
     }
 
     /** @see #first(Iterable) */
@@ -531,7 +531,7 @@ public final class _ <T> {
     public static <In> List<In> initial(Iterable<In> values, int n) {
         if (values == null) return Collections.emptyList();
 
-        List<In> initial = new ArrayList<>();
+        List<In> initial = new ArrayList<In>();
         Iterator<In> iterator = values.iterator();
         int limit = _.size(values) - n;
 
@@ -547,7 +547,7 @@ public final class _ <T> {
     }
 
     public _<T> initial(int n) {
-        return new _<>(_.initial(mValues, n));
+        return new _<T>(_.initial(mValues, n));
     }
 
     public _<T> initial() {
@@ -570,7 +570,7 @@ public final class _ <T> {
     public static <In> List<In> last(Iterable<In> values, int n) {
         if (values == null) return Collections.emptyList();
 
-        List<In> last = new ArrayList<>();
+        List<In> last = new ArrayList<In>();
         int limit = _.size(values) - n;
 
         int i = 0;
@@ -596,7 +596,7 @@ public final class _ <T> {
 
     /** @see #last(Iterable, int) */
     public _<T> last(int n) {
-        return new _<>(_.last(mValues, n));
+        return new _<T>(_.last(mValues, n));
     }
 
     /** @see #last(int) */
@@ -615,7 +615,7 @@ public final class _ <T> {
     }
 
     public _<T> rest(int startindex) {
-        return new _<>(_.rest(mValues, startindex));
+        return new _<T>(_.rest(mValues, startindex));
     }
 
     public _<T> rest() {
@@ -642,7 +642,7 @@ public final class _ <T> {
     public static <F,S> List<Map.Entry<F,S>> zip(Iterable<F> first, Iterable<S> second) {
         if (first == null || second == null) return Collections.emptyList();
 
-        List<Map.Entry<F,S>> zipped = new ArrayList<>();
+        List<Map.Entry<F,S>> zipped = new ArrayList<Map.Entry<F,S>>();
         Iterator<F> f;
         Iterator<S> s;
 
@@ -655,7 +655,7 @@ public final class _ <T> {
 
     /** @see #zip(Iterable, Iterable) */
     public <O> _<Map.Entry<T,O>> zip(Iterable<O> other) {
-        return new _<>(_.zip(mValues, other));
+        return new _<Map.Entry<T,O>>(_.zip(mValues, other));
     }
 
     // ----- _.range -------------------------------------------------------------------------------
@@ -696,7 +696,7 @@ public final class _ <T> {
                 step == 0 ||
                 start > stop && step > 0) return Collections.emptyList();
 
-        List<Integer> range = new ArrayList<>();
+        List<Integer> range = new ArrayList<Integer>();
         BiPredicate<Integer, Integer> compare = (start < stop) ? smaller : greater;
 
         for (int i = start; compare.test(i, stop); i += step)
@@ -812,7 +812,7 @@ public final class _ <T> {
     public static <In> List<In> list(In... values) {
         if (values == null) return Collections.emptyList();
 
-        List<In> iterable = new ArrayList<>();
+        List<In> iterable = new ArrayList<In>();
         for (In value : values) {
             iterable.add(value);
         }
@@ -840,7 +840,7 @@ public final class _ <T> {
     public static <Key,Value> Map<Key,Value> dictionary(Map.Entry<Key, Value>... entries) {
         if (entries == null) return Collections.emptyMap();
 
-        Map<Key,Value> result = new HashMap<>();
+        Map<Key,Value> result = new HashMap<Key,Value>();
         for (Map.Entry<Key, Value> entry : entries)
             result.put(entry.getKey(), entry.getValue());
 
@@ -850,7 +850,7 @@ public final class _ <T> {
     // ----- _.entry -------------------------------------------------------------------------------
 
     public static <Key,Value> Map.Entry<Key,Value> entry(Key key, Value value) {
-        return new AbstractMap.SimpleEntry<>(key, value);
+        return new AbstractMap.SimpleEntry<Key,Value>(key, value);
     }
 
     // ----- _.join --------------------------------------------------------------------------------
