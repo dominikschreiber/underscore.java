@@ -812,7 +812,7 @@ public class _Test {
 
     @Test
     public void dictionaryWithNullInput() {
-        assertEquals(Collections.emptyMap(), _.dictionary((Map.Entry) null));
+        assertEquals(Collections.emptyMap(), _.dictionary(null));
     }
 
     // ----- _.entry -------------------------------------------------------------------------------
